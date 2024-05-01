@@ -14,9 +14,6 @@ exports.handleIncomingCall = (req, res) => {
   const endTime = moment().tz(timezone).hour(17).minute(0).second(0);
   const response = new VoiceResponse();
 
-  console.log(req.body);
-  console.log(req.params);
-
   if (currentTime.isBetween(startTime, endTime)) {
     console.log("Handling call normally.");
 
@@ -38,9 +35,12 @@ exports.handleIncomingCall = (req, res) => {
       recordingStatusCallbackMethod: "POST",
     });
   } else {
-    console.log("Directing to voicemail due to outside business hours.");
+    const dial = response.dial({ timeout: 20 });
+    dial.number({
+      url: "https://services.leadconnectorhq.com/phone-system/voice-call/inbound",
+    });
     response.say(
-      "Directing to voicemail due to outside business hours. Please leave a message after the beep."
+      "No one is available to take your call. Please leave a message after the beep."
     );
     response.record({
       maxLength: 30,
@@ -52,6 +52,20 @@ exports.handleIncomingCall = (req, res) => {
 
       recordingStatusCallbackMethod: "POST",
     });
+    // console.log("Directing to voicemail due to outside business hours.");
+    // response.say(
+    //   "Directing to voicemail due to outside business hours. Please leave a message after the beep."
+    // );
+    // response.record({
+    //   maxLength: 30,
+    //   playBeep: true,
+    //   finishOnKey: "hangup",
+    //   recordingStatusCallback: `/twilio/recording-completed?callerNumber=${encodeURIComponent(
+    //     req.body.From
+    //   )}`,
+
+    //   recordingStatusCallbackMethod: "POST",
+    // });
   }
 
   res.type("text/xml");
@@ -59,8 +73,6 @@ exports.handleIncomingCall = (req, res) => {
 };
 
 exports.handleRecordingCompleted = async (req, res) => {
-  console.log(req.body);
-  console.log("Headers: ", req.headers);
   const recordingUrl = req.body.RecordingUrl;
   const callerNumber = req.query.callerNumber || req.body.From;
 
@@ -77,7 +89,7 @@ exports.handleRecordingCompleted = async (req, res) => {
     from: '"Linkage" <gabriel.maturan@linkage.ph>',
     to: "gabriel.maturan@linkage.ph, gmaturan60@gmail.com",
     subject: "New Voicemail Received",
-    text: `You have a new voicemail from ${callerNumber}: ${recordingUrl}`, // This is just a fallback for email clients that do not support HTML
+    text: `You have a new voicemail from ${callerNumber}: ${recordingUrl}`,
     html: `
       <html>
         <head>
