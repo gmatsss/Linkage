@@ -39,8 +39,8 @@ exports.handleIncomingCall = (req, res) => {
 };
 
 exports.handleRecordingCompleted = async (req, res) => {
+  console.log(req.body);
   const recordingUrl = req.body.RecordingUrl;
-
   const transporter = nodemailer.createTransport({
     host: "mail.linkage.ph",
     secure: true,
