@@ -16,42 +16,20 @@ exports.handleIncomingCall = (req, res) => {
 
   if (currentTime.isBetween(startTime, endTime)) {
     console.log("Handling call normally.");
-
-    const dial = response.dial({ timeout: 20 });
-    dial.number({
-      url: "https://services.leadconnectorhq.com/phone-system/voice-call/inbound",
-    });
-    response.say(
-      "No one is available to take your call. Please leave a message after the beep."
+    response.redirect(
+      {
+        method: "POST",
+      },
+      "https://services.leadconnectorhq.com/phone-system/voice-call/inbound"
     );
-    response.record({
-      maxLength: 30,
-      playBeep: true,
-      finishOnKey: "hangup",
-      recordingStatusCallback: `/twilio/recording-completed?callerNumber=${encodeURIComponent(
-        req.body.From
-      )}`,
-
-      recordingStatusCallbackMethod: "POST",
-    });
   } else {
-    const dial = response.dial({ timeout: 20 });
-    dial.number({
-      url: "https://services.leadconnectorhq.com/phone-system/voice-call/inbound",
-    });
-    response.say(
-      "No one is available to take your call. Please leave a message after the beep."
+    console.log("Handling call normally.");
+    response.redirect(
+      {
+        method: "POST",
+      },
+      "https://services.leadconnectorhq.com/phone-system/voice-call/inbound"
     );
-    response.record({
-      maxLength: 30,
-      playBeep: true,
-      finishOnKey: "hangup",
-      recordingStatusCallback: `/twilio/recording-completed?callerNumber=${encodeURIComponent(
-        req.body.From
-      )}`,
-
-      recordingStatusCallbackMethod: "POST",
-    });
     // console.log("Directing to voicemail due to outside business hours.");
     // response.say(
     //   "Directing to voicemail due to outside business hours. Please leave a message after the beep."
