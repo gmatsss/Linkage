@@ -15,6 +15,7 @@ exports.handleIncomingCall = (req, res) => {
   const endTime = moment().tz(timezone).hour(17).minute(0).second(0);
 
   const response = new VoiceResponse();
+  console.log(response);
 
   if (currentTime.isBetween(startTime, endTime)) {
     console.log("Handling call normally.");
@@ -35,7 +36,9 @@ exports.handleIncomingCall = (req, res) => {
     });
   } else {
     console.log("Directing to voicemail due to outside business hours.");
-    response.say("Please leave a message 30 seconds voicemail after the beep.");
+    response.say(
+      "Directing to voicemail due to outside business hours. Please leave a message after the beep."
+    );
     response.record({
       maxLength: 30,
       playBeep: true,
