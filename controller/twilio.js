@@ -31,7 +31,10 @@ exports.handleIncomingCall = (req, res) => {
       maxLength: 30,
       playBeep: true,
       finishOnKey: "hangup",
-      recordingStatusCallback: "/twilio/recording-completed",
+      recordingStatusCallback: `/twilio/recording-completed?callerNumber=${encodeURIComponent(
+        req.body.From
+      )}`,
+
       recordingStatusCallbackMethod: "POST",
     });
   } else {
@@ -43,7 +46,10 @@ exports.handleIncomingCall = (req, res) => {
       maxLength: 30,
       playBeep: true,
       finishOnKey: "hangup",
-      recordingStatusCallback: "/twilio/recording-completed",
+      recordingStatusCallback: `/twilio/recording-completed?callerNumber=${encodeURIComponent(
+        req.body.From
+      )}`,
+
       recordingStatusCallbackMethod: "POST",
     });
   }
@@ -56,7 +62,7 @@ exports.handleRecordingCompleted = async (req, res) => {
   console.log(req.body);
   console.log("Headers: ", req.headers);
   const recordingUrl = req.body.RecordingUrl;
-  const callerNumber = req.body.From;
+  const callerNumber = req.query.callerNumber || req.body.From;
 
   const transporter = nodemailer.createTransport({
     host: "mail.linkage.ph",
