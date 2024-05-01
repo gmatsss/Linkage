@@ -98,3 +98,25 @@ exports.handleRecordingCompleted = async (req, res) => {
     }
   });
 };
+
+exports.handleVoicemail = (req, res) => {
+  const response = new VoiceResponse();
+
+  response.say(
+    "No one is available to take your call. Please leave a message after the beep."
+  );
+
+  response.record({
+    maxLength: 30,
+    playBeep: true,
+    finishOnKey: "hangup",
+    recordingStatusCallback: `/twilio/recording-completed?callerNumber=${encodeURIComponent(
+      req.body.From
+    )}`,
+
+    recordingStatusCallbackMethod: "POST",
+  });
+
+  res.type("text/xml");
+  res.send(response.toString());
+};
