@@ -28,7 +28,7 @@ exports.handleIncomingCall = (req, res) => {
   } else {
     console.log("Handling call normally.");
     const dial = response.dial({
-      action: "/handlevoicemail", // URL to handle the next steps after dial
+      action: "/twilio/handlevoicemail", // URL to handle the next steps after dial
       method: "POST",
       timeout: 20, // seconds to wait for the call to be answered
     });
