@@ -14,6 +14,9 @@ exports.handleIncomingCall = (req, res) => {
   const endTime = moment().tz(timezone).hour(17).minute(0).second(0);
   const response = new VoiceResponse();
 
+  console.log(req.body);
+  console.log(req.params);
+
   if (currentTime.isBetween(startTime, endTime)) {
     console.log("Handling call normally.");
 
@@ -53,7 +56,7 @@ exports.handleRecordingCompleted = async (req, res) => {
   console.log(req.body);
   console.log("Headers: ", req.headers);
   const recordingUrl = req.body.RecordingUrl;
-  const callerNumber = req.body.From; // This retrieves the caller's phone number from the request
+  const callerNumber = req.body.From;
 
   const transporter = nodemailer.createTransport({
     host: "mail.linkage.ph",
