@@ -17,7 +17,7 @@ exports.handleIncomingCall = (req, res) => {
   if (currentTime.isBetween(startTime, endTime)) {
     console.log("Handling call normally.");
     const dial = response.dial({
-      action: "/handlevoicemail", // URL to handle the next steps after dial
+      action: "/twilio/handlevoicemail", // URL to handle the next steps after dial
       method: "POST",
       timeout: 20, // seconds to wait for the call to be answered
     });
@@ -113,6 +113,8 @@ exports.handleRecordingCompleted = async (req, res) => {
 };
 
 exports.handleVoicemail = (req, res) => {
+  const response = new VoiceResponse();
+
   response.say(
     "No one is available to take your call. Please leave a message after the beep."
   );
