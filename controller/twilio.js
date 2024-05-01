@@ -8,14 +8,11 @@ const client = twilio(accountSid, authToken);
 const nodemailer = require("nodemailer");
 
 exports.handleIncomingCall = (req, res) => {
-  // Set the timezone to Central Time (Arkadelphia, AR)
   const timezone = "America/Chicago";
   const currentTime = moment().tz(timezone);
   const startTime = moment().tz(timezone).hour(8).minute(0).second(0);
   const endTime = moment().tz(timezone).hour(17).minute(0).second(0);
-
   const response = new VoiceResponse();
-  console.log(response);
 
   if (currentTime.isBetween(startTime, endTime)) {
     console.log("Handling call normally.");
@@ -54,6 +51,7 @@ exports.handleIncomingCall = (req, res) => {
 
 exports.handleRecordingCompleted = async (req, res) => {
   console.log(req.body);
+  console.log("Headers: ", req.headers);
   const recordingUrl = req.body.RecordingUrl;
   const callerNumber = req.body.From; // This retrieves the caller's phone number from the request
 
@@ -70,8 +68,32 @@ exports.handleRecordingCompleted = async (req, res) => {
     from: '"Linkage" <gabriel.maturan@linkage.ph>',
     to: "gabriel.maturan@linkage.ph, gmaturan60@gmail.com",
     subject: "New Voicemail Received",
-    text: `You have a new voicemail from ${callerNumber}: ${recordingUrl}`,
-    html: `<b>You have a new voicemail from ${callerNumber}:</b> <a href="${recordingUrl}">${recordingUrl}</a>`,
+    text: `You have a new voicemail from ${callerNumber}: ${recordingUrl}`, // This is just a fallback for email clients that do not support HTML
+    html: `
+      <html>
+        <head>
+          <style>
+            body { font-family: Arial, sans-serif; margin: 20px; color: #333; }
+            .header { color: #444; font-size: 22px; font-weight: bold; }
+            .info { font-size: 18px; margin-top: 20px; }
+            .info b { color: #555; }
+            .link { margin-top: 20px; }
+            .link a { background-color: #007BFF; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; }
+          </style>
+        </head>
+        <body>
+          <div class="header">New Voicemail Notification</div>
+          <p class="info">
+            <b>From:</b> ${callerNumber}<br>
+            <b>Time:</b> ${moment().format("LLLL")}<br>
+          </p>
+          <p class="info">Please listen to the voicemail by clicking on the link below:</p>
+          <div class="link">
+            <a href="${recordingUrl}" target="_blank">Listen to Voicemail</a>
+          </div>
+        </body>
+      </html>
+    `,
   };
 
   transporter.sendMail(mailOptions, (error, info) => {
