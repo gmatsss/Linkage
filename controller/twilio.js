@@ -30,7 +30,7 @@ exports.handleIncomingCall = (req, res) => {
     response.record({
       maxLength: 30,
       playBeep: true,
-      recordingStatusCallback: "/recording-completed",
+      recordingStatusCallback: "/twilio/recording-completed",
     });
   }
 
