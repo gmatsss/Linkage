@@ -26,14 +26,20 @@ exports.handleIncomingCall = (req, res) => {
     );
   } else {
     console.log("Directing to voicemail due to outside business hours.");
-    response.say("Please leave a message 30 seconds voicemail after the beep.");
-    response.record({
-      maxLength: 30,
-      playBeep: true,
-      finishOnKey: "hangup",
-      recordingStatusCallback: "/twilio/recording-completed",
-      recordingStatusCallbackMethod: "POST",
-    });
+    response.redirect(
+      {
+        method: "POST",
+      },
+      "https://services.leadconnectorhq.com/phone-system/voice-call/inbound"
+    );
+    // response.say("Please leave a message 30 seconds voicemail after the beep.");
+    // response.record({
+    //   maxLength: 30,
+    //   playBeep: true,
+    //   finishOnKey: "hangup",
+    //   recordingStatusCallback: "/twilio/recording-completed",
+    //   recordingStatusCallbackMethod: "POST",
+    // });
   }
 
   res.type("text/xml");
