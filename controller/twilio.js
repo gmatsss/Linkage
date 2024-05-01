@@ -14,16 +14,25 @@ exports.handleIncomingCall = (req, res) => {
   const startTime = moment().tz(timezone).hour(8).minute(0).second(0);
   const endTime = moment().tz(timezone).hour(17).minute(0).second(0);
 
-  const response = new VoiceResponse(); // Ensure response is defined here
+  const response = new VoiceResponse();
 
   if (currentTime.isBetween(startTime, endTime)) {
     console.log("Handling call normally.");
-    response.redirect(
-      {
-        method: "POST",
-      },
-      "https://services.leadconnectorhq.com/phone-system/voice-call/inbound"
+
+    const dial = response.dial({ timeout: 20 });
+    dial.number({
+      url: "https://services.leadconnectorhq.com/phone-system/voice-call/inbound",
+    });
+    response.say(
+      "No one is available to take your call. Please leave a message after the beep."
     );
+    response.record({
+      maxLength: 30,
+      playBeep: true,
+      finishOnKey: "hangup",
+      recordingStatusCallback: "/twilio/recording-completed",
+      recordingStatusCallbackMethod: "POST",
+    });
   } else {
     console.log("Directing to voicemail due to outside business hours.");
     response.say("Please leave a message 30 seconds voicemail after the beep.");
@@ -43,6 +52,8 @@ exports.handleIncomingCall = (req, res) => {
 exports.handleRecordingCompleted = async (req, res) => {
   console.log(req.body);
   const recordingUrl = req.body.RecordingUrl;
+  const callerNumber = req.body.From; // This retrieves the caller's phone number from the request
+
   const transporter = nodemailer.createTransport({
     host: "mail.linkage.ph",
     secure: true,
@@ -53,11 +64,11 @@ exports.handleRecordingCompleted = async (req, res) => {
   });
 
   const mailOptions = {
-    from: '"Gabriel Maturan" <gabriel.maturan@linkage.ph>',
+    from: '"Linkage" <gabriel.maturan@linkage.ph>',
     to: "gabriel.maturan@linkage.ph, gmaturan60@gmail.com",
     subject: "New Voicemail Received",
-    text: `You have a new voicemail: ${recordingUrl}`,
-    html: `<b>You have a new voicemail:</b> <a href="${recordingUrl}">${recordingUrl}</a>`,
+    text: `You have a new voicemail from ${callerNumber}: ${recordingUrl}`,
+    html: `<b>You have a new voicemail from ${callerNumber}:</b> <a href="${recordingUrl}">${recordingUrl}</a>`,
   };
 
   transporter.sendMail(mailOptions, (error, info) => {
