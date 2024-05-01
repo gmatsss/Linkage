@@ -26,11 +26,13 @@ exports.handleIncomingCall = (req, res) => {
     );
   } else {
     console.log("Directing to voicemail due to outside business hours.");
-    response.say("Please leave a message after the beep.");
+    response.say("Please leave a message 30 seconds voicemail after the beep.");
     response.record({
       maxLength: 30,
       playBeep: true,
+      finishOnKey: "hangup",
       recordingStatusCallback: "/twilio/recording-completed",
+      recordingStatusCallbackMethod: "POST",
     });
   }
 
