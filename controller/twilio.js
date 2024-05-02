@@ -28,20 +28,32 @@ exports.handleIncomingCall = (req, res) => {
     response.say("Invalid option. The call will now end.");
     response.hangup();
   } else {
-    console.log("Directing to voicemail due to outside business hours.");
-    response.say(
-      "Directing to voicemail due to outside business hours. Please leave a message after the beep."
-    );
-    response.record({
-      maxLength: 30,
-      playBeep: true,
-      finishOnKey: "hangup",
-      recordingStatusCallback: `/twilio/recording-completed?callerNumber=${encodeURIComponent(
-        req.body.From
-      )}`,
-
-      recordingStatusCallbackMethod: "POST",
+    console.log("Handling call within business hours.");
+    const gather = response.gather({
+      numDigits: 1,
+      action: "/twilio/handleKey",
+      method: "POST",
     });
+    gather.say(
+      "Press 1 to speak with a representative, or press 2 to leave a message."
+    );
+
+    response.say("Invalid option. The call will now end.");
+    response.hangup();
+    // console.log("Directing to voicemail due to outside business hours.");
+    // response.say(
+    //   "Directing to voicemail due to outside business hours. Please leave a message after the beep."
+    // );
+    // response.record({
+    //   maxLength: 30,
+    //   playBeep: true,
+    //   finishOnKey: "hangup",
+    //   recordingStatusCallback: `/twilio/recording-completed?callerNumber=${encodeURIComponent(
+    //     req.body.From
+    //   )}`,
+
+    //   recordingStatusCallbackMethod: "POST",
+    // });
   }
 
   res.type("text/xml");
