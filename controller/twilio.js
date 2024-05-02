@@ -20,18 +20,6 @@ exports.handleIncomingCall = (req, res) => {
       "Thank you for calling. Please hold while we connect you to Pat Murphy."
     );
     response.pause({ length: 20 });
-    response.redirect({
-      method: "POST",
-      action: `/twilio/handleVoicemail?callerNumber=${encodeURIComponent(
-        req.body.From
-      )}`,
-    });
-  } else {
-    console.log("Handling call within business hours.");
-    response.say(
-      "Thank you for calling. Please hold while we connect you to Pat Murphy."
-    );
-    response.pause({ length: 20 });
 
     response.say(
       "No one is available to take your call. Please leave a message after the beep."
@@ -47,21 +35,20 @@ exports.handleIncomingCall = (req, res) => {
 
       recordingStatusCallbackMethod: "POST",
     });
-
-    // console.log("Directing to voicemail due to outside business hours.");
-    // response.say(
-    //   "Directing to voicemail due to outside business hours. Please leave a message after the beep."
-    // );
-    // response.record({
-    //   maxLength: 30,
-    //   playBeep: true,
-    //   finishOnKey: "hangup",
-    //   recordingStatusCallback: `/twilio/recording-completed?callerNumber=${encodeURIComponent(
-    //     req.body.From
-    //   )}`,
-
-    //   recordingStatusCallbackMethod: "POST",
-    // });
+  } else {
+    console.log("Directing to voicemail due to outside business hours.");
+    response.say(
+      "Directing to voicemail due to outside business hours. Please leave a message after the beep."
+    );
+    response.record({
+      maxLength: 30,
+      playBeep: true,
+      finishOnKey: "hangup",
+      recordingStatusCallback: `/twilio/recording-completed?callerNumber=${encodeURIComponent(
+        req.body.From
+      )}`,
+      recordingStatusCallbackMethod: "POST",
+    });
   }
 
   res.type("text/xml");
@@ -84,7 +71,7 @@ exports.handleRecordingCompleted = async (req, res) => {
   const mailOptions = {
     //need there email provider
     from: '"Linkage" <gabriel.maturan@linkage.ph>',
-    to: "gabriel.maturan@linkage.ph", //, hpmurphy@icloud.com
+    to: "gabriel.maturan@linkage.ph, hpmurphy@icloud.com", //, hpmurphy@icloud.com
 
     subject: "New Voicemail Received",
     text: `You have a new voicemail from ${callerNumber}: ${recordingUrl}`,
@@ -124,28 +111,6 @@ exports.handleRecordingCompleted = async (req, res) => {
       next(req, res, callerNumber, recordingUrl);
     }
   });
-};
-
-exports.handleVoicemail = (req, res) => {
-  const response = new VoiceResponse();
-
-  response.say(
-    "No one is available to take your call. Please leave a message after the beep."
-  );
-
-  response.record({
-    maxLength: 30,
-    playBeep: true,
-    finishOnKey: "hangup",
-    recordingStatusCallback: `/twilio/recording-completed?callerNumber=${encodeURIComponent(
-      req.body.From
-    )}`,
-
-    recordingStatusCallbackMethod: "POST",
-  });
-
-  res.type("text/xml");
-  res.send(response.toString());
 };
 
 exports.handleKey = (req, res) => {
