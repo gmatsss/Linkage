@@ -1,6 +1,7 @@
 const moment = require("moment-timezone");
 const twilio = require("twilio");
 const VoiceResponse = twilio.twiml.VoiceResponse;
+const fetch = require("node-fetch");
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
@@ -15,13 +16,18 @@ exports.handleIncomingCall = (req, res) => {
   const response = new VoiceResponse();
 
   if (currentTime.isBetween(startTime, endTime)) {
-    console.log("Handling call normally.");
-    response.redirect(
-      {
-        method: "POST",
-      },
-      "https://services.leadconnectorhq.com/phone-system/voice-call/inbound"
+    console.log("Handling call within business hours.");
+    const gather = response.gather({
+      numDigits: 1,
+      action: "/twilio/handleKey",
+      method: "POST",
+    });
+    gather.say(
+      "Press 1 to speak with a representative, or press 2 to leave a message."
     );
+
+    response.say("Invalid option. The call will now end.");
+    response.hangup();
   } else {
     console.log("Directing to voicemail due to outside business hours.");
     response.say(
@@ -58,7 +64,8 @@ exports.handleRecordingCompleted = async (req, res) => {
 
   const mailOptions = {
     from: '"Linkage" <gabriel.maturan@linkage.ph>',
-    to: "gabriel.maturan@linkage.ph, gmaturan60@gmail.com",
+    to: "gabriel.maturan@linkage.ph, gmaturan60@gmail.com", //hpmurphy@icloud.com
+
     subject: "New Voicemail Received",
     text: `You have a new voicemail from ${callerNumber}: ${recordingUrl}`,
     html: `
@@ -94,7 +101,7 @@ exports.handleRecordingCompleted = async (req, res) => {
       res.status(500).send("Error sending email: " + error.message);
     } else {
       console.log("Email sent: " + info.response);
-      res.status(200).send("Email sent successfully");
+      next(req, res, callerNumber, recordingUrl);
     }
   });
 };
@@ -120,3 +127,62 @@ exports.handleVoicemail = (req, res) => {
   res.type("text/xml");
   res.send(response.toString());
 };
+
+exports.handleKey = (req, res) => {
+  const pressedKey = req.body.Digits;
+  const response = new VoiceResponse();
+
+  if (pressedKey === "1") {
+    response.redirect(
+      {
+        method: "POST",
+      },
+      "https://services.leadconnectorhq.com/phone-system/voice-call/inbound"
+    );
+  } else if (pressedKey === "2") {
+    response.say("Please leave your message after the beep.");
+    response.record({
+      maxLength: 30,
+      playBeep: true,
+      finishOnKey: "hangup",
+      recordingStatusCallback: `/twilio/recording-completed?callerNumber=${encodeURIComponent(
+        req.body.From
+      )}`,
+      recordingStatusCallbackMethod: "POST",
+    });
+  } else {
+    response.say("Invalid option. The call will now end.");
+    response.hangup();
+  }
+
+  res.type("text/xml");
+  res.send(response.toString());
+};
+
+function next(req, res, callerNumber, recordingUrl) {
+  const postData = {
+    msg: "New Voice mail received",
+    contact: callerNumber,
+    link: recordingUrl,
+  };
+
+  fetch(
+    "https://services.leadconnectorhq.com/hooks/cgAQMEZGL1qQIq1fJXJ3/webhook-trigger/e5340601-db59-4eae-b414-76682ca23a6d",
+    {
+      method: "POST",
+      body: JSON.stringify(postData),
+      headers: { "Content-Type": "application/json" },
+    }
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Webhook POST successful:", data);
+      res.status(200).send("Email and webhook notification sent successfully");
+    })
+    .catch((error) => {
+      console.error("Error in sending webhook POST:", error);
+      res
+        .status(500)
+        .send("Email sent but webhook POST failed: " + error.message);
+    });
+}

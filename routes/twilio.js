@@ -4,10 +4,12 @@ const {
   handleIncomingCall,
   handleRecordingCompleted,
   handleVoicemail,
+  handleKey,
 } = require("../controller/twilio");
 
 router.post("/incoming", handleIncomingCall);
 router.post("/recording-completed", handleRecordingCompleted);
 router.post("/handlevoicemail", handleVoicemail);
+router.post("/handleKey", handleKey);
 
 module.exports = router;
