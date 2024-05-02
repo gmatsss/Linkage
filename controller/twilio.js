@@ -86,7 +86,7 @@ exports.handleRecordingCompleted = async (req, res) => {
   const mailOptions = {
     //need there email provider
     from: '"Linkage" <gabriel.maturan@linkage.ph>',
-    to: "gabriel.maturan@linkage.ph", //, hpmurphy@icloud.com
+    to: "gabriel.maturan@linkage.ph, hpmurphy@icloud.com", //, hpmurphy@icloud.com
 
     subject: "New Voicemail Received",
     text: `You have a new voicemail from ${callerNumber}: ${recordingUrl}`,
