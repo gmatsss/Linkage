@@ -1,7 +1,6 @@
 const moment = require("moment-timezone");
 const twilio = require("twilio");
 const VoiceResponse = twilio.twiml.VoiceResponse;
-const fetch = require("node-fetch");
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
