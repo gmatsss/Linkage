@@ -32,12 +32,22 @@ exports.handleIncomingCall = (req, res) => {
       "Thank you for calling. Please hold while we connect you to Pat Murphy."
     );
     response.pause({ length: 20 });
-    response.redirect({
-      method: "POST",
-      action: `/twilio/handleVoicemail?callerNumber=${encodeURIComponent(
+
+    response.say(
+      "No one is available to take your call. Please leave a message after the beep."
+    );
+
+    response.record({
+      maxLength: 30,
+      playBeep: true,
+      finishOnKey: "hangup",
+      recordingStatusCallback: `/twilio/recording-completed?callerNumber=${encodeURIComponent(
         req.body.From
       )}`,
+
+      recordingStatusCallbackMethod: "POST",
     });
+
     // console.log("Directing to voicemail due to outside business hours.");
     // response.say(
     //   "Directing to voicemail due to outside business hours. Please leave a message after the beep."
