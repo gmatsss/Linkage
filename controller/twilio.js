@@ -75,17 +75,18 @@ exports.handleRecordingCompleted = async (req, res) => {
   // }
 
   const transporter = nodemailer.createTransport({
-    host: "mail.linkage.ph",
-    secure: true,
+    host: process.env.SMTP_HOST,
+    port: 587, // Common port for SMTP
+    secure: false, // true for 465, false for other ports
     auth: {
-      user: "gabriel.maturan@linkage.ph",
-      pass: "Linkage2023",
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
     },
   });
 
   const mailOptions = {
     //need there email provider
-    from: '"Linkage" <gabriel.maturan@linkage.ph>',
+    from: '"GHL Voicemail" <test.bcremit@gmail.com>',
     to: "gabriel.maturan@linkage.ph, roggie@bcremit.app", //, hpmurphy@icloud.com
 
     subject: "New Voicemail Received",
