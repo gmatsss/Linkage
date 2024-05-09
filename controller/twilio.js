@@ -18,9 +18,7 @@ exports.handleIncomingCall = (req, res) => {
 
   if (currentTime.isBetween(startTime, endTime)) {
     console.log("Handling call within business hours.");
-    response.say(
-      "Thank you for calling. Please hold while we connect you to Pat Murphy."
-    );
+    response.say("Thank you for calling. Please hold while we connect you");
     response.pause({ length: 20 });
 
     response.say(
