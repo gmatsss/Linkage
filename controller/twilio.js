@@ -2,8 +2,8 @@ const moment = require("moment-timezone");
 const twilio = require("twilio");
 const VoiceResponse = twilio.twiml.VoiceResponse;
 
-const accountSid = process.env.TWILIO_ACCOUNT_SID;
-const authToken = process.env.TWILIO_AUTH_TOKEN;
+const accountSid = process.env.TWILIO_ACCOUNT_SIDBC;
+const authToken = process.env.TWILIO_AUTH_TOKENBC;
 const client = twilio(accountSid, authToken);
 const nodemailer = require("nodemailer");
 
