@@ -10,46 +10,26 @@ const client = twilio(apiKeySid, apiKeySecret, { accountSid: accountSid });
 const nodemailer = require("nodemailer");
 
 exports.handleIncomingCall = (req, res) => {
-  const timezone = "America/Chicago";
-  const currentTime = moment().tz(timezone);
-  const startTime = moment().tz(timezone).hour(8).minute(0).second(0);
-  const endTime = moment().tz(timezone).hour(17).minute(0).second(0);
   const response = new VoiceResponse();
 
-  if (currentTime.isBetween(startTime, endTime)) {
-    console.log("Handling call within business hours.");
-    response.say("Thank you for calling. Please hold while we connect you");
-    response.pause({ length: 20 });
+  console.log("Handling call within business hours.");
+  response.say("Thank you for calling. Please hold while we connect you");
+  response.pause({ length: 25 });
 
-    response.say(
-      "No one is available to take your call. Please leave a message after the beep."
-    );
+  response.say(
+    "No one is available to take your call. Please leave a message after the beep."
+  );
 
-    response.record({
-      maxLength: 30,
-      playBeep: true,
-      finishOnKey: "hangup",
-      recordingStatusCallback: `/twilio/recording-completed?callerNumber=${encodeURIComponent(
-        req.body.From
-      )}`,
+  response.record({
+    maxLength: 30,
+    playBeep: true,
+    finishOnKey: "hangup",
+    recordingStatusCallback: `/twilio/recording-completed?callerNumber=${encodeURIComponent(
+      req.body.From
+    )}`,
 
-      recordingStatusCallbackMethod: "POST",
-    });
-  } else {
-    console.log("Directing to voicemail due to outside business hours.");
-    response.say(
-      "Directing to voicemail due to outside business hours. Please leave a message after the beep."
-    );
-    response.record({
-      maxLength: 30,
-      playBeep: true,
-      finishOnKey: "hangup",
-      recordingStatusCallback: `/twilio/recording-completed?callerNumber=${encodeURIComponent(
-        req.body.From
-      )}`,
-      recordingStatusCallbackMethod: "POST",
-    });
-  }
+    recordingStatusCallbackMethod: "POST",
+  });
 
   res.type("text/xml");
   res.send(response.toString());
@@ -58,21 +38,6 @@ exports.handleIncomingCall = (req, res) => {
 exports.handleRecordingCompleted = async (req, res) => {
   const recordingUrl = req.body.RecordingUrl;
   const callerNumber = req.query.callerNumber || req.body.From;
-
-  // const smsBody = `New voicemail from: ${callerNumber}\nListen to the recording: ${recordingUrl}`;
-
-  // try {
-  //   const smsResponse = await client.messages.create({
-  //     body: smsBody,
-  //     to: "+18706170452",
-  //     from: "+16292228993", //support own by twilio numbers
-  //   });
-  //   console.log("SMS successfully sent", smsResponse.sid);
-  // } catch (error) {
-  //   console.log("Failed to send SMS", error);
-  //   res.status(500).send("Failed to send SMS: " + error.message);
-  //   return;
-  // }
 
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
