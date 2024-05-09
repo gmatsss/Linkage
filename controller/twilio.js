@@ -59,20 +59,20 @@ exports.handleRecordingCompleted = async (req, res) => {
   const recordingUrl = req.body.RecordingUrl;
   const callerNumber = req.query.callerNumber || req.body.From;
 
-  const smsBody = `New voicemail from: ${callerNumber}\nListen to the recording: ${recordingUrl}`;
+  // const smsBody = `New voicemail from: ${callerNumber}\nListen to the recording: ${recordingUrl}`;
 
-  try {
-    const smsResponse = await client.messages.create({
-      body: smsBody,
-      to: "+18706170452",
-      from: "+16292228993",
-    });
-    console.log("SMS successfully sent", smsResponse.sid);
-  } catch (error) {
-    console.log("Failed to send SMS", error);
-    res.status(500).send("Failed to send SMS: " + error.message);
-    return;
-  }
+  // try {
+  //   const smsResponse = await client.messages.create({
+  //     body: smsBody,
+  //     to: "+18706170452",
+  //     from: "+16292228993", //support own by twilio numbers
+  //   });
+  //   console.log("SMS successfully sent", smsResponse.sid);
+  // } catch (error) {
+  //   console.log("Failed to send SMS", error);
+  //   res.status(500).send("Failed to send SMS: " + error.message);
+  //   return;
+  // }
 
   const transporter = nodemailer.createTransport({
     host: "mail.linkage.ph",
@@ -86,7 +86,7 @@ exports.handleRecordingCompleted = async (req, res) => {
   const mailOptions = {
     //need there email provider
     from: '"Linkage" <gabriel.maturan@linkage.ph>',
-    to: "gabriel.maturan@linkage.ph, hpmurphy@icloud.com", //, hpmurphy@icloud.com
+    to: "gabriel.maturan@linkage.ph, roggie@bcremit.app", //, hpmurphy@icloud.com
 
     subject: "New Voicemail Received",
     text: `You have a new voicemail from ${callerNumber}: ${recordingUrl}`,
