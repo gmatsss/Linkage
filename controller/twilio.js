@@ -31,6 +31,8 @@ exports.handleIncomingCall = (req, res) => {
     recordingStatusCallbackMethod: "POST",
   });
 
+  response.hangup();
+
   res.type("text/xml");
   res.send(response.toString());
 };
