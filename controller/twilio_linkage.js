@@ -8,33 +8,51 @@ const client = twilio(accountSid, authToken);
 const nodemailer = require("nodemailer");
 
 exports.handleIncomingCalllink = (req, res) => {
+  const callSid = req.body.CallSid;
+
   const timezone = "America/Chicago";
   const currentTime = moment().tz(timezone);
   const startTime = moment().tz(timezone).hour(8).minute(0).second(0);
   const endTime = moment().tz(timezone).hour(17).minute(0).second(0);
   const response = new VoiceResponse();
+  let callsHandled = {};
 
   if (currentTime.isBetween(startTime, endTime)) {
+    // Check if the call has been handled already
+    if (callsHandled[callSid]) {
+      console.log("Call already handled:", callSid);
+      const response = new VoiceResponse();
+      response.hangup();
+      res.type("text/xml");
+      res.send(response.toString());
+      return;
+    }
+
     console.log("Handling call within business hours.");
     response.say(
       "Thank you for calling. Please hold while we connect you to Pat Murphy."
     );
-    response.pause({ length: 20 });
+    response.pause({ length: 25 });
 
     response.say(
       "No one is available to take your call. Please leave a message after the beep."
     );
 
     response.record({
-      maxLength: 30,
+      maxLength: 30, // Maximum recording duration in seconds.
       playBeep: true,
-      finishOnKey: "hangup",
-      recordingStatusCallback: `/twilio/recording-completedlink?callerNumber=${encodeURIComponent(
+      finishOnKey: "#", // Use '#' or another suitable key to end recording early.
+      recordingStatusCallback: `/twilio/recording-completed?callerNumber=${encodeURIComponent(
         req.body.From
       )}`,
-
       recordingStatusCallbackMethod: "POST",
     });
+
+    // Explicitly hang up after the record command.
+    response.hangup();
+
+    // Mark this call as handled.
+    callsHandled[callSid] = true;
   } else {
     console.log("Directing to voicemail due to outside business hours.");
     response.say(
