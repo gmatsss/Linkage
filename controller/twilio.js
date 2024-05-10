@@ -35,7 +35,7 @@ exports.handleIncomingCall = (req, res) => {
   );
 
   response.record({
-    maxLength: 30, // Maximum recording duration in seconds.
+    maxLength: 40, // Maximum recording duration in seconds.
     playBeep: true,
     finishOnKey: "#", // Use '#' or another suitable key to end recording early.
     recordingStatusCallback: `/twilio/recording-completed?callerNumber=${encodeURIComponent(
@@ -58,61 +58,59 @@ exports.handleRecordingCompleted = async (req, res) => {
   const recordingUrl = req.body.RecordingUrl;
   const callerNumber = req.query.callerNumber || req.body.From;
 
-  // const transporter = nodemailer.createTransport({
-  //   host: process.env.SMTP_HOST,
-  //   port: 587, // Common port for SMTP
-  //   secure: false, // true for 465, false for other ports
-  //   auth: {
-  //     user: process.env.SMTP_USER,
-  //     pass: process.env.SMTP_PASS,
-  //   },
-  // });
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: 587, // Common port for SMTP
+    secure: false, // true for 465, false for other ports
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+  });
 
-  // const mailOptions = {
-  //   //need there email provider
-  //   from: '"GHL Voicemail" <test.bcremit@gmail.com>',
-  //   to: "roggie@bcremit.app, gabriel.maturan@linkage.ph", //, hpmurphy@icloud.com
+  const mailOptions = {
+    //need there email provider
+    from: '"GHL Voicemail" <test.bcremit@gmail.com>',
+    to: "roggie@bcremit.app, gabriel.maturan@linkage.ph", //, hpmurphy@icloud.com
 
-  //   subject: "New Voicemail Received",
-  //   text: `You have a new voicemail from ${callerNumber}: ${recordingUrl}`,
-  //   html: `
-  //     <html>
-  //       <head>
-  //         <style>
-  //           body { font-family: Arial, sans-serif; margin: 20px; color: #333; }
-  //           .header { color: #444; font-size: 22px; font-weight: bold; }
-  //           .info { font-size: 18px; margin-top: 20px; }
-  //           .info b { color: #555; }
-  //           .link { margin-top: 20px; }
-  //           .link a { background-color: #007BFF; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; }
-  //         </style>
-  //       </head>
-  //       <body>
-  //         <div class="header">New Voicemail Notification</div>
-  //         <p class="info">
-  //           <b>From:</b> ${callerNumber}<br>
-  //           <b>Time:</b> ${moment().format("LLLL")}<br>
-  //         </p>
-  //         <p class="info">Please listen to the voicemail by clicking on the link below:</p>
-  //         <div class="link">
-  //           <a href="${recordingUrl}" target="_blank">Listen to Voicemail</a>
-  //         </div>
-  //       </body>
-  //     </html>
-  //   `,
-  // };
+    subject: "New Voicemail Received",
+    text: `You have a new voicemail from ${callerNumber}: ${recordingUrl}`,
+    html: `
+      <html>
+        <head>
+          <style>
+            body { font-family: Arial, sans-serif; margin: 20px; color: #333; }
+            .header { color: #444; font-size: 22px; font-weight: bold; }
+            .info { font-size: 18px; margin-top: 20px; }
+            .info b { color: #555; }
+            .link { margin-top: 20px; }
+            .link a { background-color: #007BFF; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; }
+          </style>
+        </head>
+        <body>
+          <div class="header">New Voicemail Notification</div>
+          <p class="info">
+            <b>From:</b> ${callerNumber}<br>
+            <b>Time:</b> ${moment().format("LLLL")}<br>
+          </p>
+          <p class="info">Please listen to the voicemail by clicking on the link below:</p>
+          <div class="link">
+            <a href="${recordingUrl}" target="_blank">Listen to Voicemail</a>
+          </div>
+        </body>
+      </html>
+    `,
+  };
 
-  // transporter.sendMail(mailOptions, (error, info) => {
-  //   if (error) {
-  //     console.log(error);
-  //     res.status(500).send("Error sending email: " + error.message);
-  //   } else {
-  //     console.log("Email sent: " + info.response);
-  //     next(req, res, callerNumber, recordingUrl);
-  //   }
-  // });
-
-  next(req, res, callerNumber, recordingUrl);
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(error);
+      res.status(500).send("Error sending email: " + error.message);
+    } else {
+      console.log("Email sent: " + info.response);
+      next(req, res, callerNumber, recordingUrl);
+    }
+  });
 };
 
 exports.handleKey = (req, res) => {
