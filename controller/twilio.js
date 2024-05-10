@@ -9,10 +9,24 @@ const accountSid = process.env.TWILIO_ACCOUNT_SIDBC;
 const client = twilio(apiKeySid, apiKeySecret, { accountSid: accountSid });
 const nodemailer = require("nodemailer");
 
+let callsHandled = {}; // This should ideally be a persistent store if your server restarts.
+
 exports.handleIncomingCall = (req, res) => {
+  const callSid = req.body.CallSid;
+
+  // Check if the call has been handled already
+  if (callsHandled[callSid]) {
+    console.log("Call already handled:", callSid);
+    const response = new VoiceResponse();
+    response.hangup();
+    res.type("text/xml");
+    res.send(response.toString());
+    return;
+  }
+
   const response = new VoiceResponse();
 
-  console.log("Handling call within business hours.");
+  console.log("Handling call within business hours:", callSid);
   response.say("Thank you for calling. Please hold while we connect you");
   response.pause({ length: 25 });
 
@@ -32,6 +46,9 @@ exports.handleIncomingCall = (req, res) => {
 
   // Explicitly hang up after the record command.
   response.hangup();
+
+  // Mark this call as handled.
+  callsHandled[callSid] = true;
 
   res.type("text/xml");
   res.send(response.toString());
