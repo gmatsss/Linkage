@@ -21,16 +21,16 @@ exports.handleIncomingCall = (req, res) => {
   );
 
   response.record({
-    maxLength: 30,
-    timeout: 30,
+    maxLength: 30, // Maximum recording duration in seconds.
     playBeep: true,
-    finishOnKey: "hangup",
+    finishOnKey: "#", // Use '#' or another suitable key to end recording early.
     recordingStatusCallback: `/twilio/recording-completed?callerNumber=${encodeURIComponent(
       req.body.From
     )}`,
     recordingStatusCallbackMethod: "POST",
   });
 
+  // Explicitly hang up after the record command.
   response.hangup();
 
   res.type("text/xml");
