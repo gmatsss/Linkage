@@ -22,12 +22,12 @@ exports.handleIncomingCall = (req, res) => {
 
   response.record({
     maxLength: 30,
+    timeout: 30,
     playBeep: true,
     finishOnKey: "hangup",
     recordingStatusCallback: `/twilio/recording-completed?callerNumber=${encodeURIComponent(
       req.body.From
     )}`,
-
     recordingStatusCallbackMethod: "POST",
   });
 
