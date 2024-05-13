@@ -1,7 +1,10 @@
 require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
+
 const callRoutes = require("./routes/twilio");
+const playRoutes = require("./routes/playai");
+const qobRoutes = require("./routes/qobRoutes");
 
 const app = express();
 
@@ -12,6 +15,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Mounting the Twilio routes
 app.use("/twilio", callRoutes);
+app.use("/qobRoutes", qobRoutes);
 
 // Simple route for root to check if server is running
 app.get("/", (req, res) => {
