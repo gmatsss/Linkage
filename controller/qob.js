@@ -1,87 +1,24 @@
 const SalesForceSalesOrder = require("../model/SalesForceSalesOrder");
 
-// async function formatlineofitems(req, res) {
-//   try {
-//     const { ItemId, UnitPrice, custID, qty } = req.body;
-//     const itemIds = ItemId.split(",").map((item) => item.trim()); // Split and trim item IDs
-//     const unitPrices = UnitPrice.split(",").map((price) =>
-//       parseFloat(price.trim())
-//     ); // Split, trim and convert to float
-
-//     // Build the line items array
-//     const lineItems = itemIds.map((itemId, index) => ({
-//       DetailType: "SalesItemLineDetail",
-//       Amount: unitPrices[index] * qty[index], // Calculate amount as UnitPrice * Qty
-//       SalesItemLineDetail: {
-//         ServiceDate: "2024-05-13", // will ask what is the date
-//         ItemRef: {
-//           value: itemId,
-//         },
-//         UnitPrice: unitPrices[index],
-//         Qty: qty[index],
-//       },
-//     }));
-
-//     // Construct the full response object
-//     const response = {
-//       Line: lineItems,
-//       CustomerRef: {
-//         value: custID,
-//       },
-//       TxnTaxDetail: {
-//         TotalTax: 0,
-//       },
-//       ApplyTaxAfterDiscount: false,
-//     };
-
-//     // Send the formatted JSON response
-//     res.json(response);
-//   } catch (error) {
-//     console.error("Error processing request:", error);
-//     res.status(500).send("An error occurred processing your request.");
-//   }
-// }
-
 async function formatlineofitems(req, res) {
   try {
-    const {
-      ItemId,
-      UnitPrice,
-      custID,
-      qty,
-      PONumber,
-      BillEmail,
-      ShipAddr,
-      BillAddr,
-      TxnDate,
-      ExpirationDate,
-      ShipMethod,
-      ClassRef,
-      LocationRef,
-      PrivateNote,
-    } = req.body;
-
-    // Utility function to handle single or multiple values
-    const toArray = (value) =>
-      typeof value === "string"
-        ? value.split(",").map((v) => v.trim())
-        : [value];
-
-    const itemIds = toArray(ItemId); // Handle single or multiple item IDs
-    const unitPrices = toArray(UnitPrice).map((price) => parseFloat(price)); // Handle single or multiple unit prices
-    const quantities = toArray(qty).map((quantity) => parseFloat(quantity)); // Handle single or multiple quantities
+    const { ItemId, UnitPrice, custID, qty } = req.body;
+    const itemIds = ItemId.split(",").map((item) => item.trim()); // Split and trim item IDs
+    const unitPrices = UnitPrice.split(",").map((price) =>
+      parseFloat(price.trim())
+    ); // Split, trim and convert to float
 
     // Build the line items array
     const lineItems = itemIds.map((itemId, index) => ({
       DetailType: "SalesItemLineDetail",
-      Amount: unitPrices[index] * quantities[index], // Calculate amount as UnitPrice * Qty
+      Amount: unitPrices[index] * qty[index], // Calculate amount as UnitPrice * Qty
       SalesItemLineDetail: {
-        ServiceDate: "2024-05-13", // Placeholder date
+        ServiceDate: "2024-05-13", // will ask what is the date
         ItemRef: {
           value: itemId,
         },
         UnitPrice: unitPrices[index],
-        Qty: quantities[index],
+        Qty: qty[index],
       },
     }));
 
@@ -95,7 +32,6 @@ async function formatlineofitems(req, res) {
         TotalTax: 0,
       },
       ApplyTaxAfterDiscount: false,
-      // Hardcoded data for additional fields
       CustomField: [
         {
           DefinitionId: "1",
@@ -113,6 +49,7 @@ async function formatlineofitems(req, res) {
     res.status(500).send("An error occurred processing your request.");
   }
 }
+
 const createSalesOrder = async (req, res) => {
   const { SalesOrderID: id, name, time } = req.body;
 
