@@ -37,7 +37,7 @@ async function formatlineofitems(req, res) {
           DefinitionId: "1",
           Name: "PO Number",
           Type: "StringType",
-          StringValue: PONumber || "PO12345", // Hardcoded value as fallback
+          StringValue: "PO12345", // Hardcoded value as fallback
         },
       ],
     };
