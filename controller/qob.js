@@ -94,10 +94,15 @@ const checkopportunityfields = async (req, res) => {
     const missingFields = fieldsToCheck.filter((field) => !req.body[field.key]);
 
     if (missingFields.length > 0) {
+      const missingFieldsLabels = missingFields.map((field) => field.label);
+      const message = `Missing required fields: ${missingFieldsLabels.join(
+        ", "
+      )}`;
+
       return res.status(200).json({
         success: false,
-        message: "Missing required fields",
-        missingFields: missingFields.map((field) => field.label),
+        message: message,
+        missingFields: missingFieldsLabels,
       });
     }
 
