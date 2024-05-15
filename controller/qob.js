@@ -43,26 +43,30 @@ async function formatlineofitems(req, res) {
 }
 
 const createSalesOrder = async (req, res) => {
-  const { SalesOrderID: id, time } = req.body;
+  const { SalesOrderID: id, name, time } = req.body;
 
   try {
     // Check if a sales order with the given id already exists
     const existingOrder = await SalesForceSalesOrder.findOne({ id });
 
     if (existingOrder) {
-      return res
-        .status(400)
-        .json({ message: "Sales order with this ID already exists" });
+      return res.status(200).json({
+        message: "Sales order with this ID already exists",
+        IsSaved: true,
+      });
     }
 
     // Create a new sales order
     const newOrder = new SalesForceSalesOrder({
       id,
+      name,
       time,
     });
 
     await newOrder.save();
-    res.status(201).json({ message: "Sales order created successfully" });
+    res
+      .status(201)
+      .json({ message: "Sales order created successfully", IsSaved: false });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });
