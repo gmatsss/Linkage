@@ -87,7 +87,7 @@ async function formatlineofitems(req, res) {
 
       // EstimateNumber: "EST12345", // Example hardcoded estimate number
       // Business: "Example Business", // Example hardcoded business
-      Rep: "MDS", // Example hardcoded representative
+      // Rep: "MDS", // Example hardcoded representative
       // ServiceDate: "2024-05-13", // Example hardcoded service date
     };
 
