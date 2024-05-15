@@ -58,37 +58,6 @@ async function formatlineofitems(req, res) {
           StringValue: "sales3_value",
         },
       ],
-      // BillEmail: {
-      //   Address: "steven_test@example.com",
-      // },
-      // ShipAddr: {
-      //   City: "Manalapan",
-      //   Line1: "500 CRAIG RD STE 101",
-      //   PostalCode: "07726",
-      //   CountrySubDivisionCode: "NJ",
-      // },
-      // BillAddr: {
-      //   City: "Manalapan",
-      //   Line1: "500 CRAIG RD STE 101",
-      //   PostalCode: "07726",
-      //   CountrySubDivisionCode: "NJ",
-      // },
-      // TxnDate: "2024-05-15",
-      // ExpirationDate: "2024-06-15",
-      // ShipMethodRef: {
-      //   value: "FedEx",
-      // },
-      // ClassRef: {
-      //   value: "20000000000000000000",
-      // },
-      // LocationRef: {
-      //   value: "123 Default Location",
-      // },
-
-      // EstimateNumber: "EST12345", // Example hardcoded estimate number
-      // Business: "Example Business", // Example hardcoded business
-      // Rep: "MDS", // Example hardcoded representative
-      // ServiceDate: "2024-05-13", // Example hardcoded service date
     };
 
     // Send the formatted JSON response
