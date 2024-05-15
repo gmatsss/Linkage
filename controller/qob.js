@@ -130,6 +130,8 @@ const getSalesOrderStatus = async (req, res) => {
       return res.status(200).json({
         message: "Sales order with this ID and name exists",
         exists: true,
+        id: existingOrder.id,
+        name: existingOrder.name,
       });
     }
 
