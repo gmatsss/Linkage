@@ -3,10 +3,14 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 const callRoutes = require("./routes/twilio");
-// const playRoutes = require("./routes/playai");
+
 const qobRoutes = require("./routes/qobRoutes");
+const connectDB = require("./db");
 
 const app = express();
+
+// Connect to MongoDB
+connectDB();
 
 // Middleware for parsing application/json
 app.use(bodyParser.json());

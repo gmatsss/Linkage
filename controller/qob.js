@@ -1,3 +1,5 @@
+const SalesForceSalesOrder = require("../model/SalesForceSalesOrder");
+
 async function formatlineofitems(req, res) {
   try {
     const { ItemId, UnitPrice, custID, qty } = req.body;
@@ -40,6 +42,34 @@ async function formatlineofitems(req, res) {
   }
 }
 
+const createSalesOrder = async (req, res) => {
+  const { SalesOrderID: id, time } = req.body;
+
+  try {
+    // Check if a sales order with the given id already exists
+    const existingOrder = await SalesForceSalesOrder.findOne({ id });
+
+    if (existingOrder) {
+      return res
+        .status(400)
+        .json({ message: "Sales order with this ID already exists" });
+    }
+
+    // Create a new sales order
+    const newOrder = new SalesForceSalesOrder({
+      id,
+      time,
+    });
+
+    await newOrder.save();
+    res.status(201).json({ message: "Sales order created successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 module.exports = {
   formatlineofitems,
+  createSalesOrder,
 };
