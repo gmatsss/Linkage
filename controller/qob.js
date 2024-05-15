@@ -73,7 +73,49 @@ const createSalesOrder = async (req, res) => {
   }
 };
 
+const checkopportunityfields = async (req, res) => {
+  try {
+    // Define the fields to check and their human-readable labels
+    const fieldsToCheck = [
+      { key: "PriceBook", label: "Price Book" },
+      { key: "CloseDate", label: "Close Date" },
+      { key: "CustomerPhone", label: "Customer Phone" },
+      { key: "ShippingStreet", label: "Shipping Street" },
+      { key: "ShippingCity", label: "Shipping City" },
+      { key: "ShippingState", label: "Shipping State" },
+      { key: "ShippingZip", label: "Shipping Zip" },
+      { key: "ClassField", label: "Class Field" },
+      { key: "PO_Number", label: "PO Number" },
+      { key: "Terms", label: "Terms" },
+      { key: "Rep", label: "Rep" },
+    ];
+
+    // Check if all required fields have values
+    const missingFields = fieldsToCheck.filter((field) => !req.body[field.key]);
+
+    if (missingFields.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Missing required fields",
+        missingFields: missingFields.map((field) => field.label),
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "All required fields are present",
+    });
+  } catch (error) {
+    console.error("Error checking opportunity fields:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+
 module.exports = {
   formatlineofitems,
   createSalesOrder,
+  checkopportunityfields,
 };
