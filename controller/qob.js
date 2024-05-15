@@ -85,10 +85,10 @@ async function formatlineofitems(req, res) {
       //   value: "123 Default Location",
       // },
 
-      EstimateNumber: "EST12345", // Example hardcoded estimate number
+      // EstimateNumber: "EST12345", // Example hardcoded estimate number
       // Business: "Example Business", // Example hardcoded business
       Rep: "MDS", // Example hardcoded representative
-      ServiceDate: "2024-05-13", // Example hardcoded service date
+      // ServiceDate: "2024-05-13", // Example hardcoded service date
     };
 
     // Send the formatted JSON response
