@@ -104,33 +104,6 @@ async function formatlineofitems(req, res) {
           StringValue: PONumber || "PO12345", // Hardcoded value as fallback
         },
       ],
-      BillEmail: {
-        Address: BillEmail || "defaultemail@example.com", // Hardcoded value as fallback
-      },
-      ShipAddr: {
-        City: ShipAddr?.City || "Default City",
-        Line1: ShipAddr?.Line1 || "123 Default St",
-        PostalCode: ShipAddr?.PostalCode || "12345",
-        CountrySubDivisionCode: ShipAddr?.CountrySubDivisionCode || "XX",
-      },
-      BillAddr: {
-        City: BillAddr?.City || "Default City",
-        Line1: BillAddr?.Line1 || "123 Default St",
-        PostalCode: BillAddr?.PostalCode || "12345",
-        CountrySubDivisionCode: BillAddr?.CountrySubDivisionCode || "XX",
-      },
-      TxnDate: TxnDate || "2024-05-15", // Hardcoded date as fallback
-      ExpirationDate: ExpirationDate || "2024-06-15", // Hardcoded expiration date as fallback
-      ShipMethodRef: {
-        value: ShipMethod || "FedEx", // Hardcoded value as fallback
-      },
-      ClassRef: {
-        value: ClassRef || "20000000000000000000", // Hardcoded value as fallback
-      },
-      LocationRef: {
-        value: LocationRef || "123 Default Location", // Hardcoded value as fallback
-      },
-      PrivateNote: PrivateNote || "Default internal memo", // Hardcoded note as fallback
     };
 
     // Send the formatted JSON response
