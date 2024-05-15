@@ -37,9 +37,65 @@ async function formatlineofitems(req, res) {
           DefinitionId: "1",
           Name: "PO Number",
           Type: "StringType",
-          StringValue: "PO12345", // Hardcoded value as fallback
+          StringValue: "PO12345",
+        },
+        {
+          DefinitionId: "2",
+          Name: "Sales1",
+          Type: "StringType",
+          StringValue: "sales1_value",
+        },
+        {
+          DefinitionId: "3",
+          Name: "Sales2",
+          Type: "StringType",
+          StringValue: "sales2_value",
+        },
+        {
+          DefinitionId: "4",
+          Name: "Sales3",
+          Type: "StringType",
+          StringValue: "sales3_value",
         },
       ],
+      BillEmail: {
+        Address: "steven_test@example.com",
+      },
+      ShipAddr: {
+        City: "Manalapan",
+        Line1: "500 CRAIG RD STE 101",
+        PostalCode: "07726",
+        CountrySubDivisionCode: "NJ",
+      },
+      BillAddr: {
+        City: "Manalapan",
+        Line1: "500 CRAIG RD STE 101",
+        PostalCode: "07726",
+        CountrySubDivisionCode: "NJ",
+      },
+      TxnDate: "2024-05-15",
+      ExpirationDate: "2024-06-15",
+      ShipMethodRef: {
+        value: "FedEx",
+      },
+      ClassRef: {
+        value: "20000000000000000000",
+      },
+      LocationRef: {
+        value: "123 Default Location",
+      },
+      PrivateNote: "Default internal memo",
+      PrintStatus: "NeedToPrint",
+      EmailStatus: "NotSet",
+      EstimateNumber: "EST12345", // Example hardcoded estimate number
+      Business: "Example Business", // Example hardcoded business
+      Rep: "Example Rep", // Example hardcoded representative
+      ServiceDate: "2024-05-13", // Example hardcoded service date
+      Amount: 924.0, // Example hardcoded amount
+      TaxableSubTotal: 0.0, // Example hardcoded taxable subtotal
+      Shipping: 0.0, // Example hardcoded shipping
+      TaxOnShipping: 0.0, // Example hardcoded tax on shipping
+      Total: 924.0, // Example hardcoded total
     };
 
     // Send the formatted JSON response
