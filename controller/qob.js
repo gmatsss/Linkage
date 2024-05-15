@@ -1,24 +1,85 @@
 const SalesForceSalesOrder = require("../model/SalesForceSalesOrder");
 
+// async function formatlineofitems(req, res) {
+//   try {
+//     const { ItemId, UnitPrice, custID, qty } = req.body;
+//     const itemIds = ItemId.split(",").map((item) => item.trim()); // Split and trim item IDs
+//     const unitPrices = UnitPrice.split(",").map((price) =>
+//       parseFloat(price.trim())
+//     ); // Split, trim and convert to float
+
+//     // Build the line items array
+//     const lineItems = itemIds.map((itemId, index) => ({
+//       DetailType: "SalesItemLineDetail",
+//       Amount: unitPrices[index] * qty[index], // Calculate amount as UnitPrice * Qty
+//       SalesItemLineDetail: {
+//         ServiceDate: "2024-05-13", // will ask what is the date
+//         ItemRef: {
+//           value: itemId,
+//         },
+//         UnitPrice: unitPrices[index],
+//         Qty: qty[index],
+//       },
+//     }));
+
+//     // Construct the full response object
+//     const response = {
+//       Line: lineItems,
+//       CustomerRef: {
+//         value: custID,
+//       },
+//       TxnTaxDetail: {
+//         TotalTax: 0,
+//       },
+//       ApplyTaxAfterDiscount: false,
+//     };
+
+//     // Send the formatted JSON response
+//     res.json(response);
+//   } catch (error) {
+//     console.error("Error processing request:", error);
+//     res.status(500).send("An error occurred processing your request.");
+//   }
+// }
+
 async function formatlineofitems(req, res) {
   try {
-    const { ItemId, UnitPrice, custID, qty } = req.body;
+    const {
+      ItemId,
+      UnitPrice,
+      custID,
+      qty,
+      PONumber,
+      BillEmail,
+      ShipAddr,
+      BillAddr,
+      TxnDate,
+      ExpirationDate,
+      ShipMethod,
+      ClassRef,
+      LocationRef,
+      PrivateNote,
+    } = req.body;
+
     const itemIds = ItemId.split(",").map((item) => item.trim()); // Split and trim item IDs
     const unitPrices = UnitPrice.split(",").map((price) =>
       parseFloat(price.trim())
     ); // Split, trim and convert to float
+    const quantities = qty
+      .split(",")
+      .map((quantity) => parseFloat(quantity.trim())); // Split, trim and convert to float
 
     // Build the line items array
     const lineItems = itemIds.map((itemId, index) => ({
       DetailType: "SalesItemLineDetail",
-      Amount: unitPrices[index] * qty[index], // Calculate amount as UnitPrice * Qty
+      Amount: unitPrices[index] * quantities[index], // Calculate amount as UnitPrice * Qty
       SalesItemLineDetail: {
         ServiceDate: "2024-05-13", // will ask what is the date
         ItemRef: {
           value: itemId,
         },
         UnitPrice: unitPrices[index],
-        Qty: qty[index],
+        Qty: quantities[index],
       },
     }));
 
@@ -32,6 +93,42 @@ async function formatlineofitems(req, res) {
         TotalTax: 0,
       },
       ApplyTaxAfterDiscount: false,
+      // Hardcoded data for additional fields
+      CustomField: [
+        {
+          DefinitionId: "1",
+          Name: "PO Number",
+          Type: "StringType",
+          StringValue: PONumber || "PO12345", // Hardcoded value as fallback
+        },
+      ],
+      BillEmail: {
+        Address: BillEmail || "defaultemail@example.com", // Hardcoded value as fallback
+      },
+      ShipAddr: {
+        City: ShipAddr?.City || "Default City",
+        Line1: ShipAddr?.Line1 || "123 Default St",
+        PostalCode: ShipAddr?.PostalCode || "12345",
+        CountrySubDivisionCode: ShipAddr?.CountrySubDivisionCode || "XX",
+      },
+      BillAddr: {
+        City: BillAddr?.City || "Default City",
+        Line1: BillAddr?.Line1 || "123 Default St",
+        PostalCode: BillAddr?.PostalCode || "12345",
+        CountrySubDivisionCode: BillAddr?.CountrySubDivisionCode || "XX",
+      },
+      TxnDate: TxnDate || "2024-05-15", // Hardcoded date as fallback
+      ExpirationDate: ExpirationDate || "2024-06-15", // Hardcoded expiration date as fallback
+      ShipMethodRef: {
+        value: ShipMethod || "FedEx", // Hardcoded value as fallback
+      },
+      ClassRef: {
+        value: ClassRef || "20000000000000000000", // Hardcoded value as fallback
+      },
+      LocationRef: {
+        value: LocationRef || "123 Default Location", // Hardcoded value as fallback
+      },
+      PrivateNote: PrivateNote || "Default internal memo", // Hardcoded note as fallback
     };
 
     // Send the formatted JSON response
