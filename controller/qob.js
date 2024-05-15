@@ -119,8 +119,33 @@ const checkopportunityfields = async (req, res) => {
   }
 };
 
+const getSalesOrderStatus = async (req, res) => {
+  const { id, name } = req.query; // Using query parameters for the GET request
+
+  try {
+    // Check if a sales order with the given id and name exists
+    const existingOrder = await SalesForceSalesOrder.findOne({ id, name });
+
+    if (existingOrder) {
+      return res.status(200).json({
+        message: "Sales order with this ID and name exists",
+        exists: true,
+      });
+    }
+
+    return res.status(200).json({
+      message: "Sales order with this ID and name does not exist",
+      exists: false,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 module.exports = {
   formatlineofitems,
   createSalesOrder,
   checkopportunityfields,
+  getSalesOrderStatus,
 };
