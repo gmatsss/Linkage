@@ -35,27 +35,33 @@ async function formatlineofitems(req, res) {
       CustomField: [
         {
           DefinitionId: "1",
-          Name: "PO Number",
+          Name: "sales3",
           Type: "StringType",
-          StringValue: "PO12345",
+          StringValue: "Custom value for sales3",
         },
         {
           DefinitionId: "2",
-          Name: "Sales1",
+          Name: "sales2",
           Type: "StringType",
-          StringValue: "sales1_value",
+          StringValue: "Custom value for sales2",
         },
         {
           DefinitionId: "3",
-          Name: "Sales2",
+          Name: "Ship Via",
           Type: "StringType",
-          StringValue: "sales2_value",
+          StringValue: "Custom value for Ship Via",
         },
         {
           DefinitionId: "4",
-          Name: "Sales3",
+          Name: "REP",
           Type: "StringType",
-          StringValue: "sales3_value",
+          StringValue: "Custom value for REP",
+        },
+        {
+          DefinitionId: "5",
+          Name: "PO Number",
+          Type: "StringType",
+          StringValue: "Custom value for PO Number",
         },
       ],
     };
