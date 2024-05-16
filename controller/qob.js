@@ -61,7 +61,7 @@ async function formatlineofitems(req, res) {
           DefinitionId: "5",
           Name: "PO Number",
           Type: "StringType",
-          StringValue: "Custom value for PO Number",
+          StringValue: "123Number",
         },
       ],
     };
