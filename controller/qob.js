@@ -34,31 +34,31 @@ async function formatlineofitems(req, res) {
       ApplyTaxAfterDiscount: false,
       CustomField: [
         {
-          DefinitionId: "6",
+          DefinitionId: "1",
           Name: "sales3",
           Type: "StringType",
           StringValue: "Custom value for sales3",
         },
         {
-          DefinitionId: "7",
+          DefinitionId: "2",
           Name: "sales2",
           Type: "StringType",
           StringValue: "Custom value for sales2",
         },
         {
-          DefinitionId: "8",
+          DefinitionId: "3",
           Name: "Ship Via",
           Type: "StringType",
           StringValue: "Custom value for Ship Via",
         },
         {
-          DefinitionId: "9",
+          DefinitionId: "4",
           Name: "REP",
           Type: "StringType",
           StringValue: "Custom value for REP",
         },
         {
-          DefinitionId: "10",
+          DefinitionId: "5",
           Name: "PO Number",
           Type: "StringType",
           StringValue: "Custom value for PO Number",
