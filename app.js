@@ -3,7 +3,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 const callRoutes = require("./routes/twilio");
-
+const callRouteslink = require("./routes/twiliolink");
 const qobRoutes = require("./routes/qobRoutes");
 const connectDB = require("./db");
 
@@ -19,6 +19,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Mounting the Twilio routes
 app.use("/twilio", callRoutes);
+app.use("/callRouteslink", callRouteslink);
 app.use("/qobRoutes", qobRoutes);
 
 // Simple route for root to check if server is running
