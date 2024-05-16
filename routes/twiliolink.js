@@ -5,12 +5,12 @@ const {
   handleIncomingCalllink,
   handleRecordingCompletedlink,
   handleKeylink,
-  handleIncomingCallSales,
+  handleIncomingCallSupport,
 } = require("../controller/twilio_linkage");
 
 router.post("/incominglink", handleIncomingCalllink);
 router.post("/recording-completedlink", handleRecordingCompletedlink);
 router.post("/handleKeylink", handleKeylink);
-router.post("/handleIncomingCallSales", handleIncomingCallSales);
+router.post("/handleIncomingCallSupport", handleIncomingCallSupport);
 
 module.exports = router;

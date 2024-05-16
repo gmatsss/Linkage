@@ -205,7 +205,7 @@ function next(req, res, callerNumber, recordingUrl) {
     });
 }
 
-exports.handleIncomingCallSales = (req, res) => {
+exports.handleIncomingCallSupport = (req, res) => {
   const response = new VoiceResponse();
 
   response.say("Thank you for calling. Redirecting your call now.");
