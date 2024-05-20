@@ -102,6 +102,8 @@ const checkopportunityfields = async (req, res) => {
       { key: "PO_Number", label: "PO Number" },
       { key: "Terms", label: "Terms" },
       { key: "Rep", label: "Rep" },
+      { key: "membership_status", label: "Membership Status" },
+      { key: "customer_email", label: "Customer Email" },
     ];
 
     // Check if all required fields have values
