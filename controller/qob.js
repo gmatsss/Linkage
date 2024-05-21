@@ -458,7 +458,8 @@ const getCustomerQuery = async (req, res) => {
 
 const resyncSalesforce = async (req, res) => {
   try {
-    console.log(req.params.opportunityId);
+    const opportunityId = req.query.opportunityId;
+    console.log(opportunityId);
   } catch (error) {}
 };
 
