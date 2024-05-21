@@ -455,10 +455,18 @@ const getCustomerQuery = async (req, res) => {
     res.status(500).send("An error occurred generating the query.");
   }
 };
+
+const resyncSalesforce = async (req, res) => {
+  try {
+    console.log(req.params.opportunityId);
+  } catch (error) {}
+};
+
 module.exports = {
   formatlineofitems,
   createSalesOrder,
   checkopportunityfields,
   getSalesOrderStatus,
   getCustomerQuery,
+  resyncSalesforce,
 };

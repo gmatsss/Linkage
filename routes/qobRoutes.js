@@ -12,5 +12,6 @@ router.get("/getSalesOrderStatus", authqob.getSalesOrderStatus);
 router.post("/formatlineofitems", authqob.formatlineofitems);
 router.post("/createOrder", authqob.createSalesOrder);
 router.post("/checkopportunityfields", authqob.checkopportunityfields);
+router.get("/resyncSalesforce", authqob.resyncSalesforce);
 
 module.exports = router;
