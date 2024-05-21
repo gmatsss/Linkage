@@ -333,11 +333,13 @@ const createSalesOrder = async (req, res) => {
   try {
     // Check if a sales order with the given id already exists
     const existingOrder = await SalesForceSalesOrder.findOne({ id });
+    const currentDateTime = new Date().toISOString();
 
     if (existingOrder) {
       return res.status(200).json({
         message: "Sales order with this ID already exists",
         IsSaved: true,
+        dateTime: currentDateTime,
       });
     }
 
@@ -376,6 +378,7 @@ const checkopportunityfields = async (req, res) => {
       { key: "membership_status", label: "Membership Status" },
       { key: "customer_email", label: "Customer Email" },
     ];
+    const currentDateTime = new Date().toISOString(); // Get the current date and time in ISO format
 
     // Check if all required fields have values
     const missingFields = fieldsToCheck.filter((field) => !req.body[field.key]);
@@ -390,6 +393,7 @@ const checkopportunityfields = async (req, res) => {
         success: false,
         message: message,
         missingFields: missingFieldsLabels,
+        dateTime: currentDateTime,
       });
     }
 
