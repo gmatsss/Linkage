@@ -444,14 +444,13 @@ const getCustomerQuery = async (req, res) => {
       query = `SELECT * FROM Customer WHERE DisplayName = '${customerName}' AND PrimaryEmailAddr = '${customerEmail}'`;
     }
 
-    // Return the SQL query
-    res.json({ query });
+    // Send the query as plain text response
+    res.send(query);
   } catch (error) {
     console.error("Error generating query:", error);
     res.status(500).send("An error occurred generating the query.");
   }
 };
-
 module.exports = {
   formatlineofitems,
   createSalesOrder,
