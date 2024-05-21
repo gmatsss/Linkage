@@ -2,13 +2,12 @@ const SalesForceSalesOrder = require("../model/SalesForceSalesOrder");
 
 async function formatlineofitems(req, res) {
   try {
-    const { ItemId, UnitPrice, custID, qty } = req.body;
+    const { ItemId, UnitPrice, custID, qty, Classref } = req.body;
     const itemIds = ItemId.split(",").map((item) => item.trim()); // Split and trim item IDs
     const unitPrices = UnitPrice.split(",").map((price) =>
       parseFloat(price.trim())
-    ); // Split, trim and convert to float
+    );
 
-    // Build the line items array
     const lineItems = itemIds.map((itemId, index) => ({
       DetailType: "SalesItemLineDetail",
       Amount: unitPrices[index] * qty[index], // Calculate amount as UnitPrice * Qty
@@ -32,20 +31,23 @@ async function formatlineofitems(req, res) {
         TotalTax: 0,
       },
       ApplyTaxAfterDiscount: false,
-      CustomField: [
-        {
-          DefinitionId: "4", // Replace with the actual DefinitionId for REP
-          Name: "REP",
-          Type: "StringType",
-          StringValue: "Custom value for REP",
-        },
-        {
-          DefinitionId: "5", // Replace with the actual DefinitionId for PO Number
-          Name: "PO Number",
-          Type: "StringType",
-          StringValue: "Custom value for PO Number",
-        },
-      ],
+      ClassRef: {
+        name: Classref, // Extracting the class reference name from the request body
+      },
+      // CustomField: [
+      //   {
+      //     DefinitionId: "4", // Replace with the actual DefinitionId for REP
+      //     Name: "REP",
+      //     Type: "StringType",
+      //     StringValue: "Custom value for REP",
+      //   },
+      //   {
+      //     DefinitionId: "5", // Replace with the actual DefinitionId for PO Number
+      //     Name: "PO Number",
+      //     Type: "StringType",
+      //     StringValue: "Custom value for PO Number",
+      //   },
+      // ],
     };
 
     // Send the formatted JSON response
