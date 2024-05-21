@@ -7,6 +7,7 @@ const authqob = require("../controller/qob"); // Make sure the path is correct
 // router.get("/callback", authqob.callback);
 // router.get("/oauthredirect", authqob.handleOAuthRedirect);
 
+router.post("/getCustomerQuery", authqob.getCustomerQuery);
 router.get("/getSalesOrderStatus", authqob.getSalesOrderStatus);
 router.post("/formatlineofitems", authqob.formatlineofitems);
 router.post("/createOrder", authqob.createSalesOrder);

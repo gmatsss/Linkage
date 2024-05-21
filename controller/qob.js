@@ -431,9 +431,31 @@ const getSalesOrderStatus = async (req, res) => {
   }
 };
 
+const getCustomerQuery = async (req, res) => {
+  try {
+    const { customerName, customerEmail, QBIDDOCS } = req.body;
+
+    let query;
+
+    if (QBIDDOCS) {
+      // If QBIDDOCS exists, query by ID
+      query = `SELECT * FROM Customer WHERE Id = '${QBIDDOCS}'`;
+    } else {
+      query = `SELECT * FROM Customer WHERE DisplayName = '${customerName}' AND PrimaryEmailAddr = '${customerEmail}'`;
+    }
+
+    // Return the SQL query
+    res.json({ query });
+  } catch (error) {
+    console.error("Error generating query:", error);
+    res.status(500).send("An error occurred generating the query.");
+  }
+};
+
 module.exports = {
   formatlineofitems,
   createSalesOrder,
   checkopportunityfields,
   getSalesOrderStatus,
+  getCustomerQuery,
 };
