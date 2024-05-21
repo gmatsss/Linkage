@@ -1,4 +1,5 @@
 const SalesForceSalesOrder = require("../model/SalesForceSalesOrder");
+const axios = require("axios");
 
 async function formatlineofitems(req, res) {
   const classes = [
@@ -460,7 +461,36 @@ const resyncSalesforce = async (req, res) => {
   try {
     const opportunityId = req.query.opportunityId;
     console.log(opportunityId);
-  } catch (error) {}
+
+    // Send POST request to Zapier webhook
+    const response = await axios.post(
+      "https://hooks.zapier.com/hooks/catch/775472/3vm62gm/",
+      { opportunityId }
+    );
+
+    if (response.status === 200) {
+      // If POST request is successful, send an alert and close the tab
+      res.send(`
+        <script>
+          alert('Re-sync is successful.');
+          window.close();
+        </script>
+      `);
+    } else {
+      res.send(`
+        <script>
+          alert('Re-sync failed.');
+        </script>
+      `);
+    }
+  } catch (error) {
+    console.error(error);
+    res.send(`
+      <script>
+        alert('An error occurred.');
+      </script>
+    `);
+  }
 };
 
 module.exports = {
