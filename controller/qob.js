@@ -378,9 +378,8 @@ const checkopportunityfields = async (req, res) => {
       { key: "membership_status", label: "Membership Status" },
       { key: "customer_email", label: "Customer Email" },
     ];
-    const currentDateTime = new Date().toISOString(); // Get the current date and time in ISO format
+    const currentDateTime = new Date().toISOString();
 
-    // Check if all required fields have values
     const missingFields = fieldsToCheck.filter((field) => !req.body[field.key]);
 
     if (missingFields.length > 0) {
