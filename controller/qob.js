@@ -377,6 +377,7 @@ const checkopportunityfields = async (req, res) => {
       { key: "Rep", label: "Rep" },
       { key: "membership_status", label: "Membership Status" },
       { key: "customer_email", label: "Customer Email" },
+      { key: "SKU", label: "SKU" },
     ];
     const currentDateTime = new Date().toISOString();
 
