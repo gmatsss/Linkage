@@ -226,7 +226,7 @@ exports.handleIncomingCallSupport = (req, res) => {
   // Enqueue the call into a task queue
   response.enqueue(
     {
-      waitUrl: "/holdcall", // URL to play hold music/message or silence
+      waitUrl: "http://3.80.93.16:8002/callRouteslink/holdcall", // URL to play hold music/message or silence
     },
     "supportQueue"
   );
