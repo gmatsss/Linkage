@@ -205,11 +205,63 @@ function next(req, res, callerNumber, recordingUrl) {
     });
 }
 
+// exports.handleIncomingCallSupport = (req, res) => {
+//   const response = new VoiceResponse();
+
+//   response.say("Thank you for calling. Please hold while we connect you.");
+//   response.pause({ length: 25 });
+
+//   const dial = response.dial();
+//   dial.number("+18704104327");
+
+//   res.type("text/xml");
+//   res.send(response.toString());
+// };
+
 exports.handleIncomingCallSupport = (req, res) => {
   const response = new VoiceResponse();
 
   response.say("Thank you for calling. Please hold while we connect you.");
+
+  // Enqueue the call into a task queue
+  response.enqueue(
+    {
+      waitUrl: "/holdcall", // URL to play hold music/message or silence
+    },
+    "supportQueue"
+  );
+
+  res.type("text/xml");
+  res.send(response.toString());
+
+  // After 25 seconds, dequeue and redirect the call if not answered
+  setTimeout(async () => {
+    const callSid = req.body.CallSid;
+
+    try {
+      await client.calls(callSid).update({
+        url: "http://3.80.93.16:8002/callRouteslink/dequeueAndRedirect",
+        method: "POST",
+      });
+    } catch (error) {
+      console.error("Error redirecting call:", error);
+    }
+  }, 25000);
+};
+
+exports.holdcall = (req, res) => {
+  const response = new VoiceResponse();
+
+  // Play hold music or keep the caller in silence
+  response.say("Please wait while we connect you.");
   response.pause({ length: 25 });
+
+  res.type("text/xml");
+  res.send(response.toString());
+};
+
+exports.dequeueAndRedirect = (req, res) => {
+  const response = new VoiceResponse();
 
   const dial = response.dial();
   dial.number("+18704104327");
