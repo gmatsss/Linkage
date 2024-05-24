@@ -208,8 +208,10 @@ function next(req, res, callerNumber, recordingUrl) {
 exports.handleIncomingCallSupport = (req, res) => {
   const response = new VoiceResponse();
 
-  response.say("Thank you for calling. Redirecting your call now.");
-  const dial = response.dial({ timeout: 20 });
+  response.say("Thank you for calling. Please hold while we connect you.");
+  response.pause({ length: 25 });
+
+  const dial = response.dial();
   dial.number("+18704104327");
 
   res.type("text/xml");
