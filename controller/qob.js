@@ -475,7 +475,7 @@ const resyncSalesforce = async (req, res) => {
       // If POST request is successful, send an alert and close the tab
       res.send(`
         <script>
-          alert('Re-sync is successful.');
+          alert('Request Sync Sent Please Check the logs.');
           window.close();
         </script>
       `);
