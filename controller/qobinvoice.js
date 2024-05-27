@@ -6,11 +6,18 @@ const checkInvoice = async (req, res) => {
 
   try {
     const invoice = await SalesForceInv.findOne({ id, name });
+    const currentDateTime = new Date().toISOString(); // Get the current date and time in ISO format
 
     if (invoice) {
-      res.json({ exist: true, id: invoice.id, name: invoice.name });
+      res.json({
+        exist: true,
+        id: invoice.id,
+        name: invoice.name,
+        message: "Sales order with this ID and name exists",
+        dateTime: currentDateTime,
+      });
     } else {
-      res.json({ exist: false, id, name });
+      res.json({ exist: false, dateTime: currentDateTime });
     }
   } catch (error) {
     console.error("Error checking invoice:", error);
