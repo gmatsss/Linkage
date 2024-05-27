@@ -31,7 +31,7 @@ const checkinvoicefields = async (req, res) => {
     const fieldsToCheck = [
       { key: "PriceBook", label: "Price Book" },
       { key: "CloseDate", label: "Close Date" },
-      { key: "CustomerPhone", label: "Customer Phone" },
+      { key: "CustomerPhone", label: "Phone1" },
       { key: "ShippingStreet", label: "Shipping Street" },
       { key: "ShippingCity", label: "Shipping City" },
       { key: "ShippingState", label: "Shipping State" },
