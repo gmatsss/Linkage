@@ -13,7 +13,7 @@ const checkInvoice = async (req, res) => {
         exist: true,
         id: invoice.id,
         name: invoice.name,
-        message: "Sales order with this ID and name exists",
+        message: "Opportunity invoice with this ID and name exists",
         dateTime: currentDateTime,
       });
     } else {
@@ -75,4 +75,37 @@ const checkinvoicefields = async (req, res) => {
   }
 };
 
-module.exports = { checkInvoice, checkinvoicefields };
+const checkAndCreateInvoice = async (req, res) => {
+  const { id, name } = req.body;
+
+  try {
+    const invoice = await SalesForceInv.findOne({ id, name });
+    const currentDateTime = new Date().toISOString(); // Get the current date and time in ISO format
+
+    if (invoice) {
+      res.json({
+        exist: true,
+        id: invoice.id,
+        name: invoice.name,
+        message: "Opportunity invoice with this ID and name already exists",
+        dateTime: currentDateTime,
+      });
+    } else {
+      const newInvoice = new SalesForceInv({ id, name });
+      await newInvoice.save();
+      res.json({
+        exist: false,
+        message:
+          "Opportunity invoice with this ID and name does not exist. Created new invoice.",
+        id: newInvoice.id,
+        name: newInvoice.name,
+        dateTime: currentDateTime,
+      });
+    }
+  } catch (error) {
+    console.error("Error checking or creating invoice:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+module.exports = { checkInvoice, checkinvoicefields, checkAndCreateInvoice };
