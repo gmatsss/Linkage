@@ -87,7 +87,8 @@ const checkAndCreateInvoice = async (req, res) => {
         exist: true,
         id: invoice.id,
         name: invoice.name,
-        message: "Opportunity invoice with this ID and name already exists",
+        message:
+          "Opportunity invoice with this ID and name already exists. Please refrain from updating the sync invoice",
         dateTime: currentDateTime,
       });
     } else {
