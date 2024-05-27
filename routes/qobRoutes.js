@@ -12,5 +12,6 @@ router.post("/checkopportunityfields", QobSalesorder.checkopportunityfields);
 router.get("/resyncSalesforce", QobSalesorder.resyncSalesforce);
 
 router.get("/checkInvoice", QobInvoice.checkInvoice);
+router.post("/checkinvoicefields", QobInvoice.checkinvoicefields);
 
 module.exports = router;
