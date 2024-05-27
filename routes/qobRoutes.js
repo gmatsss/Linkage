@@ -1,18 +1,16 @@
 const express = require("express");
 const router = express.Router();
-const authqob = require("../controller/qob"); // Make sure the path is correct
-
-// Use the authorization middleware on routes that require authentication
-// router.get("/auth", authqob.authorize);
-// router.get("/callback", authqob.callback);
-// router.get("/oauthredirect", authqob.handleOAuthRedirect);
+const QobSalesorder = require("../controller/qob");
+const QobInvoice = require("../controller/qobinvoice");
 
 //sales order
-router.post("/getCustomerQuery", authqob.getCustomerQuery);
-router.get("/getSalesOrderStatus", authqob.getSalesOrderStatus);
-router.post("/formatlineofitems", authqob.formatlineofitems);
-router.post("/createOrder", authqob.createSalesOrder);
-router.post("/checkopportunityfields", authqob.checkopportunityfields);
-router.get("/resyncSalesforce", authqob.resyncSalesforce);
+router.post("/getCustomerQuery", QobSalesorder.getCustomerQuery);
+router.get("/getSalesOrderStatus", QobSalesorder.getSalesOrderStatus);
+router.post("/formatlineofitems", QobSalesorder.formatlineofitems);
+router.post("/createOrder", QobSalesorder.createSalesOrder);
+router.post("/checkopportunityfields", QobSalesorder.checkopportunityfields);
+router.get("/resyncSalesforce", QobSalesorder.resyncSalesforce);
+
+router.get("/checkInvoice", QobInvoice.checkInvoice);
 
 module.exports = router;
