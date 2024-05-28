@@ -445,15 +445,14 @@ const getCustomerQuery = async (req, res) => {
     const { customerName, customerEmail, QBIDDOCS } = req.body;
 
     let query;
+    const expectedLength = 4;
 
-    if (QBIDDOCS) {
-      // If QBIDDOCS exists, query by ID
+    if (QBIDDOCS && QBIDDOCS.length === expectedLength) {
       query = `SELECT * FROM Customer WHERE Id = '${QBIDDOCS}'`;
     } else {
       query = `SELECT * FROM Customer WHERE DisplayName = '${customerName}' AND PrimaryEmailAddr = '${customerEmail}'`;
     }
 
-    // Send the query as plain text response
     res.send(query);
   } catch (error) {
     console.error("Error generating query:", error);
