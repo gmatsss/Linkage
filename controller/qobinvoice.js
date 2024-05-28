@@ -377,25 +377,21 @@ const classes = [
 const formatlineofitemsinvoice = async (req, res) => {
   try {
     const { ItemId, UnitPrice, custID, qty, Classref } = req.body;
-
-    const itemIds = Array.isArray(ItemId)
-      ? ItemId
-      : ItemId.split(",").map((item) => item.trim());
-    const unitPrices = Array.isArray(UnitPrice)
-      ? UnitPrice
-      : UnitPrice.split(",").map((price) => parseFloat(price.trim()));
-    const quantities = Array.isArray(qty)
-      ? qty
-      : qty.split(",").map((quantity) => parseFloat(quantity.trim()));
+    const itemIds = ItemId.split(",").map((item) => item.trim()); // Split and trim item IDs
+    const unitPrices = UnitPrice.split(",").map((price) =>
+      parseFloat(price.trim())
+    );
 
     const lineItems = itemIds.map((itemId, index) => ({
       DetailType: "SalesItemLineDetail",
-      Amount: unitPrices[index] * quantities[index],
+      Amount: unitPrices[index] * qty[index], // Calculate amount as UnitPrice * Qty
       SalesItemLineDetail: {
+        ServiceDate: "2024-05-13", // will ask what is the date
         ItemRef: {
-          name: "Services",
           value: itemId,
         },
+        UnitPrice: unitPrices[index],
+        Qty: qty[index],
       },
     }));
 
