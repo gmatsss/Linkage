@@ -14,5 +14,6 @@ router.get("/resyncSalesforce", QobSalesorder.resyncSalesforce);
 router.get("/checkInvoice", QobInvoice.checkInvoice);
 router.post("/checkinvoicefields", QobInvoice.checkinvoicefields);
 router.post("/checkAndCreateInvoice", QobInvoice.checkAndCreateInvoice);
+router.post("/formatlineofitemsinvoice", QobInvoice.formatlineofitemsinvoice);
 
 module.exports = router;
