@@ -393,6 +393,7 @@ const formatlineofitemsinvoice = async (req, res) => {
       Amount: unitPrices[index] * quantities[index],
       SalesItemLineDetail: {
         ItemRef: {
+          name: "Services",
           value: itemId,
         },
       },
