@@ -1,288 +1,300 @@
 const SalesForceSalesOrder = require("../model/SalesForceSalesOrder");
 const axios = require("axios");
 
+const classes = [
+  {
+    Name: "0",
+    Id: "3300000000001044461",
+  },
+  {
+    Name: "23-01-Lexington",
+    Id: "3300000000000865457",
+  },
+  {
+    Name: "23-02-(((Live))) Stream",
+    Id: "3300000000000865458",
+  },
+  {
+    Name: "23-02-Lexington",
+    Id: "3300000000000881778",
+  },
+  {
+    Name: "23-03-Chicago",
+    Id: "3300000000000881805",
+  },
+  {
+    Name: "23-03-Lexington",
+    Id: "3300000000000881806",
+  },
+  {
+    Name: "23-04-Lexington",
+    Id: "3300000000000881807",
+  },
+  {
+    Name: "23-04-SLC",
+    Id: "3300000000000881808",
+  },
+  {
+    Name: "23-05-(((Live))) Stream",
+    Id: "3300000000000881809",
+  },
+  {
+    Name: "23-05-Lexington",
+    Id: "3300000000000881811",
+  },
+  {
+    Name: "23-06-Lexington",
+    Id: "3300000000000881812",
+  },
+  {
+    Name: "23-07-Lexington",
+    Id: "3300000000000881813",
+  },
+  {
+    Name: "23-08-Lexington",
+    Id: "3300000000000881814",
+  },
+  {
+    Name: "23-08-Memphis",
+    Id: "3300000000000881815",
+  },
+  {
+    Name: "23-09-Lexington",
+    Id: "3300000000000881816",
+  },
+  {
+    Name: "23-10-(((Live))) Stream",
+    Id: "3300000000000881817",
+  },
+  {
+    Name: "23-10-Costa Mesa",
+    Id: "3300000000000881818",
+  },
+  {
+    Name: "23-10-Lexington",
+    Id: "3300000000000881819",
+  },
+  {
+    Name: "23-10-SLC",
+    Id: "3300000000000881820",
+  },
+  {
+    Name: "23-11-Lexington",
+    Id: "3300000000000881821",
+  },
+  {
+    Name: "23-11-SLC",
+    Id: "3300000000000881822",
+  },
+  {
+    Name: "24-01-Lexington",
+    Id: "3300000000000877204",
+  },
+  {
+    Name: "24-01-SLC",
+    Id: "3300000000000870394",
+  },
+  {
+    Name: "24-02-(((Live))) Stream",
+    Id: "3300000000000876509",
+  },
+  {
+    Name: "24-02-Lexington",
+    Id: "3300000000000881823",
+  },
+  {
+    Name: "24-03-Ft. Lauderdale",
+    Id: "3300000000000881824",
+  },
+  {
+    Name: "24-03-Lexington",
+    Id: "3300000000000877733",
+  },
+  {
+    Name: "24-04-Lexington",
+    Id: "3300000000000877734",
+  },
+  {
+    Name: "24-04-SLC",
+    Id: "3300000000000881825",
+  },
+  {
+    Name: "24-05-(((Live))) Stream",
+    Id: "3300000000000876510",
+  },
+  {
+    Name: "24-05-Lexington",
+    Id: "3300000000000877735",
+  },
+  {
+    Name: "24-06-Lexington",
+    Id: "3300000000000877736",
+  },
+  {
+    Name: "24-06-SLC",
+    Id: "3300000000001000688",
+  },
+  {
+    Name: "24-07-Lexington",
+    Id: "3300000000000877737",
+  },
+  {
+    Name: "24-07-WAGD",
+    Id: "3300000000001116808",
+  },
+  {
+    Name: "24-08-Atlanta",
+    Id: "3300000000000881826",
+  },
+  {
+    Name: "24-08-Lexington",
+    Id: "3300000000000877738",
+  },
+  {
+    Name: "24-09-Lexington",
+    Id: "3300000000000881833",
+  },
+  {
+    Name: "24-09-SLC",
+    Id: "3300000000000881834",
+  },
+  {
+    Name: "24-10-(((Live))) Stream",
+    Id: "3300000000000876512",
+  },
+  {
+    Name: "24-10-Denver",
+    Id: "3300000000000881837",
+  },
+  {
+    Name: "24-10-Lexington",
+    Id: "3300000000000881838",
+  },
+  {
+    Name: "24-10-SLC",
+    Id: "3300000000000881839",
+  },
+  {
+    Name: "24-11-Lexington",
+    Id: "3300000000000881840",
+  },
+  {
+    Name: "25-02-(((Live))) Stream",
+    Id: "3300000000001110582",
+  },
+  {
+    Name: "Courses",
+    Id: "3300000000000908256",
+  },
+  {
+    Name: "DOCS",
+    Id: "3300000000000870672",
+  },
+  {
+    Name: "DOCS/Ramp",
+    Id: "3300000000001110581",
+  },
+  {
+    Name: "Equipment",
+    Id: "3300000000000870388",
+  },
+  {
+    Name: "In-Office ACLS",
+    Id: "3300000000000911777",
+    ParentRef: {
+      value: "3300000000000908256",
+    },
+  },
+  {
+    Name: "In-Office Training",
+    Id: "3300000000000877049",
+    ParentRef: {
+      value: "3300000000000908256",
+    },
+  },
+  {
+    Name: "Intercompany",
+    Id: "3300000000000959468",
+  },
+  {
+    Name: "Membership",
+    Id: "3300000000000870494",
+  },
+  {
+    Name: "Misc Courses",
+    Id: "3300000000000872423",
+    ParentRef: {
+      value: "3300000000000908256",
+    },
+  },
+  {
+    Name: "NPP Renewal",
+    Id: "3300000000000881843",
+  },
+  {
+    Name: "Online",
+    Id: "3300000000000908257",
+    ParentRef: {
+      value: "3300000000000908256",
+    },
+  },
+  {
+    Name: "RAMP",
+    Id: "3300000000000877290",
+  },
+  {
+    Name: "Sponsorship",
+    Id: "3300000000000881844",
+  },
+  {
+    Name: "Strategic Dentistry",
+    Id: "3300000000000959469",
+    ParentRef: {
+      value: "3300000000000959468",
+    },
+  },
+  {
+    Name: "TBD",
+    Id: "503750",
+    ParentRef: {
+      value: "3300000000000908256",
+    },
+  },
+  {
+    Name: "Web Clip Renewal",
+    Id: "3300000000000881845",
+  },
+];
+
 async function formatlineofitems(req, res) {
-  const classes = [
-    {
-      Name: "0",
-      Id: "3300000000001044461",
-    },
-    {
-      Name: "23-01-Lexington",
-      Id: "3300000000000865457",
-    },
-    {
-      Name: "23-02-(((Live))) Stream",
-      Id: "3300000000000865458",
-    },
-    {
-      Name: "23-02-Lexington",
-      Id: "3300000000000881778",
-    },
-    {
-      Name: "23-03-Chicago",
-      Id: "3300000000000881805",
-    },
-    {
-      Name: "23-03-Lexington",
-      Id: "3300000000000881806",
-    },
-    {
-      Name: "23-04-Lexington",
-      Id: "3300000000000881807",
-    },
-    {
-      Name: "23-04-SLC",
-      Id: "3300000000000881808",
-    },
-    {
-      Name: "23-05-(((Live))) Stream",
-      Id: "3300000000000881809",
-    },
-    {
-      Name: "23-05-Lexington",
-      Id: "3300000000000881811",
-    },
-    {
-      Name: "23-06-Lexington",
-      Id: "3300000000000881812",
-    },
-    {
-      Name: "23-07-Lexington",
-      Id: "3300000000000881813",
-    },
-    {
-      Name: "23-08-Lexington",
-      Id: "3300000000000881814",
-    },
-    {
-      Name: "23-08-Memphis",
-      Id: "3300000000000881815",
-    },
-    {
-      Name: "23-09-Lexington",
-      Id: "3300000000000881816",
-    },
-    {
-      Name: "23-10-(((Live))) Stream",
-      Id: "3300000000000881817",
-    },
-    {
-      Name: "23-10-Costa Mesa",
-      Id: "3300000000000881818",
-    },
-    {
-      Name: "23-10-Lexington",
-      Id: "3300000000000881819",
-    },
-    {
-      Name: "23-10-SLC",
-      Id: "3300000000000881820",
-    },
-    {
-      Name: "23-11-Lexington",
-      Id: "3300000000000881821",
-    },
-    {
-      Name: "23-11-SLC",
-      Id: "3300000000000881822",
-    },
-    {
-      Name: "24-01-Lexington",
-      Id: "3300000000000877204",
-    },
-    {
-      Name: "24-01-SLC",
-      Id: "3300000000000870394",
-    },
-    {
-      Name: "24-02-(((Live))) Stream",
-      Id: "3300000000000876509",
-    },
-    {
-      Name: "24-02-Lexington",
-      Id: "3300000000000881823",
-    },
-    {
-      Name: "24-03-Ft. Lauderdale",
-      Id: "3300000000000881824",
-    },
-    {
-      Name: "24-03-Lexington",
-      Id: "3300000000000877733",
-    },
-    {
-      Name: "24-04-Lexington",
-      Id: "3300000000000877734",
-    },
-    {
-      Name: "24-04-SLC",
-      Id: "3300000000000881825",
-    },
-    {
-      Name: "24-05-(((Live))) Stream",
-      Id: "3300000000000876510",
-    },
-    {
-      Name: "24-05-Lexington",
-      Id: "3300000000000877735",
-    },
-    {
-      Name: "24-06-Lexington",
-      Id: "3300000000000877736",
-    },
-    {
-      Name: "24-06-SLC",
-      Id: "3300000000001000688",
-    },
-    {
-      Name: "24-07-Lexington",
-      Id: "3300000000000877737",
-    },
-    {
-      Name: "24-07-WAGD",
-      Id: "3300000000001116808",
-    },
-    {
-      Name: "24-08-Atlanta",
-      Id: "3300000000000881826",
-    },
-    {
-      Name: "24-08-Lexington",
-      Id: "3300000000000877738",
-    },
-    {
-      Name: "24-09-Lexington",
-      Id: "3300000000000881833",
-    },
-    {
-      Name: "24-09-SLC",
-      Id: "3300000000000881834",
-    },
-    {
-      Name: "24-10-(((Live))) Stream",
-      Id: "3300000000000876512",
-    },
-    {
-      Name: "24-10-Denver",
-      Id: "3300000000000881837",
-    },
-    {
-      Name: "24-10-Lexington",
-      Id: "3300000000000881838",
-    },
-    {
-      Name: "24-10-SLC",
-      Id: "3300000000000881839",
-    },
-    {
-      Name: "24-11-Lexington",
-      Id: "3300000000000881840",
-    },
-    {
-      Name: "25-02-(((Live))) Stream",
-      Id: "3300000000001110582",
-    },
-    {
-      Name: "Courses",
-      Id: "3300000000000908256",
-    },
-    {
-      Name: "DOCS",
-      Id: "3300000000000870672",
-    },
-    {
-      Name: "DOCS/Ramp",
-      Id: "3300000000001110581",
-    },
-    {
-      Name: "Equipment",
-      Id: "3300000000000870388",
-    },
-    {
-      Name: "In-Office ACLS",
-      Id: "3300000000000911777",
-      ParentRef: {
-        value: "3300000000000908256",
-      },
-    },
-    {
-      Name: "In-Office Training",
-      Id: "3300000000000877049",
-      ParentRef: {
-        value: "3300000000000908256",
-      },
-    },
-    {
-      Name: "Intercompany",
-      Id: "3300000000000959468",
-    },
-    {
-      Name: "Membership",
-      Id: "3300000000000870494",
-    },
-    {
-      Name: "Misc Courses",
-      Id: "3300000000000872423",
-      ParentRef: {
-        value: "3300000000000908256",
-      },
-    },
-    {
-      Name: "NPP Renewal",
-      Id: "3300000000000881843",
-    },
-    {
-      Name: "Online",
-      Id: "3300000000000908257",
-      ParentRef: {
-        value: "3300000000000908256",
-      },
-    },
-    {
-      Name: "RAMP",
-      Id: "3300000000000877290",
-    },
-    {
-      Name: "Sponsorship",
-      Id: "3300000000000881844",
-    },
-    {
-      Name: "Strategic Dentistry",
-      Id: "3300000000000959469",
-      ParentRef: {
-        value: "3300000000000959468",
-      },
-    },
-    {
-      Name: "TBD",
-      Id: "503750",
-      ParentRef: {
-        value: "3300000000000908256",
-      },
-    },
-    {
-      Name: "Web Clip Renewal",
-      Id: "3300000000000881845",
-    },
-  ];
   try {
-    const { ItemId, UnitPrice, custID, qty, Classref } = req.body;
+    const { ItemId, UnitPrice, custID, qty, Classref, id } = req.body;
+
+    // Retrieve the document to get the DocNumber
+    const order = await SalesForceSalesOrder.findOne({ id });
+    if (!order) {
+      return res.status(404).json({ message: "Sales order not found" });
+    }
+    const { DocNumber } = order;
+
     const itemIds = ItemId.split(",").map((item) => item.trim()); // Split and trim item IDs
     const unitPrices = UnitPrice.split(",").map((price) =>
       parseFloat(price.trim())
     );
+    const quantities = qty
+      .split(",")
+      .map((quantity) => parseFloat(quantity.trim())); // Ensure quantities are parsed correctly
 
     const lineItems = itemIds.map((itemId, index) => ({
       DetailType: "SalesItemLineDetail",
-      Amount: unitPrices[index] * qty[index], // Calculate amount as UnitPrice * Qty
+      Amount: unitPrices[index] * quantities[index], // Calculate amount as UnitPrice * Qty
       SalesItemLineDetail: {
         ServiceDate: "2024-05-13", // will ask what is the date
         ItemRef: {
           value: itemId,
         },
         UnitPrice: unitPrices[index],
-        Qty: qty[index],
+        Qty: quantities[index],
       },
     }));
 
@@ -306,20 +318,7 @@ async function formatlineofitems(req, res) {
       },
       ApplyTaxAfterDiscount: false,
       ClassRef: classRef,
-      // CustomField: [
-      //   {
-      //     DefinitionId: "4", // Replace with the actual DefinitionId for REP
-      //     Name: "REP",
-      //     Type: "StringType",
-      //     StringValue: "Custom value for REP",
-      //   },
-      //   {
-      //     DefinitionId: "5", // Replace with the actual DefinitionId for PO Number
-      //     Name: "PO Number",
-      //     Type: "StringType",
-      //     StringValue: "Custom value for PO Number",
-      //   },
-      // ],
+      DocNumber, // Include DocNumber in the response
     };
 
     // Send the formatted JSON response
@@ -343,6 +342,8 @@ const createSalesOrder = async (req, res) => {
         message: "Sales order with this ID already exists",
         IsSaved: true,
         dateTime: currentDateTime,
+        id: existingOrder.id,
+        name: existingOrder.name,
       });
     }
 
