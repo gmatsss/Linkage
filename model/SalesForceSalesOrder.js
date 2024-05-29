@@ -15,10 +15,6 @@ const SalesForceSalesOrderSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  DocNumber: {
-    type: String,
-    unique: true,
-  },
 });
 
 const SalesForceSalesOrder = mongoose.model(

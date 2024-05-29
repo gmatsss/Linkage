@@ -268,13 +268,7 @@ const classes = [
 
 async function formatlineofitems(req, res) {
   try {
-    const { ItemId, UnitPrice, custID, qty, Classref, id } = req.body;
-
-    // Retrieve the document to get the DocNumber using the id
-    const order = await SalesForceSalesOrder.findOne({ id });
-    if (!order) {
-      return res.status(404).json({ message: "Sales order not found" });
-    }
+    const { ItemId, UnitPrice, custID, qty, Classref, docnumber } = req.body;
 
     const itemIds = ItemId.split(",").map((item) => item.trim()); // Split and trim item IDs
     const unitPrices = UnitPrice.split(",").map((price) =>
@@ -303,6 +297,9 @@ async function formatlineofitems(req, res) {
       ? { name: Classref, value: classMatch.Id }
       : { name: Classref, value: null };
 
+    // Increment the DocNumber
+    const incrementedDocNumber = (parseInt(docnumber, 10) + 1).toString();
+
     // Construct the full response object
     const response = {
       Line: lineItems,
@@ -314,10 +311,10 @@ async function formatlineofitems(req, res) {
       },
       ApplyTaxAfterDiscount: false,
       ClassRef: classRef,
-      DocNumber: order.DocNumber, // Include DocNumber in the response
+      DocNumber: incrementedDocNumber,
     };
 
-    console.log(order.DocNumber);
+    console.log(response.DocNumber);
     res.json(response);
   } catch (error) {
     console.error("Error processing request:", error);
@@ -343,22 +340,11 @@ const createSalesOrder = async (req, res) => {
       });
     }
 
-    // Find the highest existing DocNumber and increment it
-    const latestOrder = await SalesForceSalesOrder.findOne()
-      .sort({ DocNumber: -1 })
-      .exec();
-
-    let newDocNumber = 1006; // Start from 1005 if no orders exist
-    if (latestOrder && latestOrder.DocNumber) {
-      newDocNumber = parseInt(latestOrder.DocNumber) + 1;
-    }
-
     // Create a new sales order
     const newOrder = new SalesForceSalesOrder({
       id,
       name,
       time,
-      DocNumber: newDocNumber.toString(), // Convert to string for storage
     });
 
     await newOrder.save();
