@@ -275,7 +275,7 @@ async function formatlineofitems(req, res) {
     if (!order) {
       return res.status(404).json({ message: "Sales order not found" });
     }
-    const { DocNumber } = order;
+    const { docNumber } = order;
 
     const itemIds = ItemId.split(",").map((item) => item.trim()); // Split and trim item IDs
     const unitPrices = UnitPrice.split(",").map((price) =>
@@ -318,7 +318,7 @@ async function formatlineofitems(req, res) {
       },
       ApplyTaxAfterDiscount: false,
       ClassRef: classRef,
-      DocNumber: DocNumber, // Include DocNumber in the response
+      DocNumber: docNumber, // Include DocNumber in the response
     };
 
     // Send the formatted JSON response
