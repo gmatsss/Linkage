@@ -284,7 +284,7 @@ async function formatlineofitems(req, res) {
 
     const lineItems = itemIds.map((itemId, index) => ({
       DetailType: "SalesItemLineDetail",
-      Amount: unitPrices[index] * quantities[index], // Calculate amount as UnitPrice * Qty
+      Amount: unitPrices[index] * qty[index], // Calculate amount as UnitPrice * Qty
       SalesItemLineDetail: {
         ServiceDate: "2024-05-13", // will ask what is the date
         ItemRef: {
