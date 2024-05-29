@@ -395,7 +395,10 @@ const formatlineofitemsinvoice = async (req, res) => {
       },
     }));
 
-    const classMatch = classes.find((cls) => cls.Name === Classref);
+    const normalizedClassref = Classref.trim().toLowerCase();
+    const classMatch = classes.find(
+      (cls) => cls.Name.trim().toLowerCase() === normalizedClassref
+    );
     const classRef = classMatch
       ? { name: Classref, value: classMatch.Id }
       : { name: Classref, value: null };
