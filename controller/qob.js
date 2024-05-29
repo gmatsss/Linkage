@@ -346,17 +346,29 @@ const createSalesOrder = async (req, res) => {
       });
     }
 
+    // Find the highest existing DocNumber and increment it
+    const latestOrder = await SalesForceSalesOrder.findOne()
+      .sort({ DocNumber: -1 })
+      .exec();
+
+    let newDocNumber = 1005; // Start from 1005 if no orders exist
+    if (latestOrder && latestOrder.DocNumber) {
+      newDocNumber = parseInt(latestOrder.DocNumber) + 1;
+    }
+
     // Create a new sales order
     const newOrder = new SalesForceSalesOrder({
       id,
       name,
       time,
+      DocNumber: newDocNumber.toString(), // Convert to string for storage
     });
 
     await newOrder.save();
-    res
-      .status(201)
-      .json({ message: "Sales order created successfully", IsSaved: false });
+    res.status(201).json({
+      message: "Sales order created successfully",
+      IsSaved: false,
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });
