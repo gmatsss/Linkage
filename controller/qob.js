@@ -281,9 +281,6 @@ async function formatlineofitems(req, res) {
     const unitPrices = UnitPrice.split(",").map((price) =>
       parseFloat(price.trim())
     );
-    const quantities = qty
-      .split(",")
-      .map((quantity) => parseFloat(quantity.trim())); // Ensure quantities are parsed correctly
 
     const lineItems = itemIds.map((itemId, index) => ({
       DetailType: "SalesItemLineDetail",
@@ -294,7 +291,7 @@ async function formatlineofitems(req, res) {
           value: itemId,
         },
         UnitPrice: unitPrices[index],
-        Qty: quantities[index],
+        Qty: qty[index],
       },
     }));
 
@@ -328,6 +325,7 @@ async function formatlineofitems(req, res) {
     res.status(500).send("An error occurred processing your request.");
   }
 }
+
 const createSalesOrder = async (req, res) => {
   const { SalesOrderID: id, name, time } = req.body;
 
