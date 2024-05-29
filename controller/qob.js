@@ -317,7 +317,7 @@ async function formatlineofitems(req, res) {
       DocNumber: order.DocNumber, // Include DocNumber in the response
     };
 
-    console.log(docNumber);
+    console.log(order.DocNumber);
     res.json(response);
   } catch (error) {
     console.error("Error processing request:", error);
