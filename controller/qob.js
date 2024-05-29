@@ -270,7 +270,7 @@ async function formatlineofitems(req, res) {
   try {
     const { ItemId, UnitPrice, custID, qty, Classref, id } = req.body;
 
-    // Retrieve the document to get the DocNumber
+    // Retrieve the document to get the DocNumber using the id
     const order = await SalesForceSalesOrder.findOne({ id });
     if (!order) {
       return res.status(404).json({ message: "Sales order not found" });
@@ -318,7 +318,7 @@ async function formatlineofitems(req, res) {
       },
       ApplyTaxAfterDiscount: false,
       ClassRef: classRef,
-      DocNumber, // Include DocNumber in the response
+      DocNumber: DocNumber, // Include DocNumber in the response
     };
 
     // Send the formatted JSON response
@@ -328,7 +328,6 @@ async function formatlineofitems(req, res) {
     res.status(500).send("An error occurred processing your request.");
   }
 }
-
 const createSalesOrder = async (req, res) => {
   const { SalesOrderID: id, name, time } = req.body;
 
