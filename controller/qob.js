@@ -348,7 +348,7 @@ const createSalesOrder = async (req, res) => {
       .sort({ DocNumber: -1 })
       .exec();
 
-    let newDocNumber = 1005; // Start from 1005 if no orders exist
+    let newDocNumber = 1006; // Start from 1005 if no orders exist
     if (latestOrder && latestOrder.DocNumber) {
       newDocNumber = parseInt(latestOrder.DocNumber) + 1;
     }
