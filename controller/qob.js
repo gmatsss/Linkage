@@ -286,8 +286,11 @@ async function formatlineofitems(req, res) {
       },
     }));
 
-    // Find the class ID by matching the name
-    const classMatch = classes.find((cls) => cls.Name === Classref);
+    // Normalize Classref and class names
+    const normalizedClassref = Classref.trim().toLowerCase();
+    const classMatch = classes.find(
+      (cls) => cls.Name.trim().toLowerCase() === normalizedClassref
+    );
     const classRef = classMatch
       ? { name: Classref, value: classMatch.Id }
       : { name: Classref, value: null };
