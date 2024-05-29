@@ -318,6 +318,7 @@ async function formatlineofitems(req, res) {
       DocNumber: docNumber, // Include DocNumber in the response
     };
 
+    console.log(docNumber);
     // Send the formatted JSON response
     res.json(response);
   } catch (error) {
