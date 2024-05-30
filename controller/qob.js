@@ -430,33 +430,31 @@ const getSalesOrderStatus = async (req, res) => {
     // Check if a sales order with the given id and name exists
     const existingOrder = await SalesForceSalesOrder.findOne({ id, name });
 
+    console.log(existingOrder);
     const currentDateTime = new Date().toISOString(); // Get the current date and time in ISO format
 
     if (existingOrder) {
       if (existingOrder.saved) {
-        // If the sales order is marked as saved
         return res.status(200).json({
           message: "Sales order with this ID and name exists",
           exists: true,
           id: existingOrder.id,
           name: existingOrder.name,
-          dateTime: currentDateTime, // Include the current date and time
+          dateTime: currentDateTime,
         });
       } else {
-        // If the sales order exists but is not marked as saved
         return res.status(200).json({
           message: "Sales order with this ID and name does not exist",
           exists: false,
-          dateTime: currentDateTime, // Include the current date and time
+          dateTime: currentDateTime,
         });
       }
     }
 
-    // If no existing order found
     return res.status(200).json({
       message: "Sales order with this ID and name does not exist",
       exists: false,
-      dateTime: currentDateTime, // Include the current date and time
+      dateTime: currentDateTime,
     });
   } catch (err) {
     console.error(err);
