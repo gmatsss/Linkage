@@ -539,7 +539,7 @@ const saveItems = async (req, res) => {
       quantity: quantity[index],
     }));
 
-    // Create new sales order
+    // Create new sales order without providing an existing ID or name
     const salesOrder = new SalesForceSalesOrder({ items });
 
     // Save the sales order and capture the saved document
