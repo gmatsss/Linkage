@@ -510,7 +510,7 @@ const resyncSalesforce = async (req, res) => {
 
 const saveItems = async (req, res) => {
   try {
-    let { Sku, quantity } = req.body; // Expecting Sku and quantity arrays as strings
+    let { Sku, quantity, id, name } = req.body; // Expecting Sku and quantity arrays as strings
 
     // Convert strings to arrays
     if (typeof Sku === "string") {
@@ -541,7 +541,7 @@ const saveItems = async (req, res) => {
     }));
 
     // Create a new sales order. This will not update an existing document.
-    const salesOrder = new SalesForceSalesOrder({ items });
+    const salesOrder = new SalesForceSalesOrder({ id, name, items });
 
     // Save the new sales order and capture the saved document
     const savedOrder = await salesOrder.save();
