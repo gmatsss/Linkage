@@ -588,7 +588,7 @@ const saveItems = async (req, res) => {
 
 const correctedline = async (req, res) => {
   try {
-    const { mongodb_id, ItemId, Unitprice, QBOsku } = req.body; // Expecting these fields in the request body
+    const { mongodb_id, ItemId, Unitprice, QBOsku } = req.body;
 
     const itemIds = ItemId.split(",").map((id) => id.trim());
     const unitPrices = Unitprice.split(",").map((price) =>
@@ -605,7 +605,7 @@ const correctedline = async (req, res) => {
       itemIds.length !== unitPrices.length ||
       itemIds.length !== qboSkus.length
     ) {
-      return res.status(200).json({
+      return res.status(400).json({
         success: false,
         message: "Invalid data",
       });
@@ -613,24 +613,36 @@ const correctedline = async (req, res) => {
 
     const salesOrder = await SalesForceSalesOrder.findById(mongodb_id);
     if (!salesOrder) {
-      res.status(200).json({
+      return res.status(404).json({
         success: false,
-        message: "Sales order Error",
+        message: "Sales order not found",
       });
     }
 
-    // Update items in the document
+    // Collect SKUs that do not match any in the database
+    const unmatchedSkus = [];
+
     salesOrder.items.forEach((item) => {
       const index = qboSkus.indexOf(item.sku);
       if (index !== -1) {
         item.itemIdqbo = itemIds[index];
         item.ItemUnitprice = unitPrices[index];
+      } else {
+        unmatchedSkus.push(item.sku);
       }
     });
 
+    // Check if there are unmatched SKUs
+    if (unmatchedSkus.length > 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Some products are not available on QBO",
+        unmatchedSkus,
+      });
+    }
+
     // Save the updated document
     const updatedOrder = await salesOrder.save();
-
     res.status(200).json({
       success: true,
       message: "Sales order updated successfully",
@@ -638,9 +650,9 @@ const correctedline = async (req, res) => {
     });
   } catch (error) {
     console.error("Error updating sales order:", error);
-    res.status(200).json({
+    res.status(500).json({
       success: false,
-      message: "Sales order Error",
+      message: "Error updating sales order",
     });
   }
 };
