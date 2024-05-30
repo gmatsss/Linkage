@@ -297,7 +297,14 @@ async function formatlineofitems(req, res) {
       ? { name: Classref, value: classMatch.Id }
       : { name: Classref, value: null };
 
-    // Increment the DocNumber
+    if (!classMatch) {
+      return res.json({
+        success: false,
+        className: Classref,
+        message: "No class field available on QBO",
+      });
+    }
+
     const incrementedDocNumber = (parseInt(docnumber, 10) + 1).toString();
 
     // Construct the full response object
