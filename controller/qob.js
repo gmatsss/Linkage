@@ -541,7 +541,7 @@ const saveItems = async (req, res) => {
     console.log("Mapped items:", items);
 
     // Create new sales order
-    const salesOrder = new ItemSalesOrder({ items });
+    const salesOrder = new SalesForceSalesOrder({ items });
 
     // Save the sales order and capture the saved document
     const savedOrder = await salesOrder.save();
