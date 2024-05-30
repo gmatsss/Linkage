@@ -425,7 +425,8 @@ const checkopportunityfields = async (req, res) => {
 
 const getSalesOrderStatus = async (req, res) => {
   const { id, name } = req.query; // Using query parameters for the GET request
-
+  console.log(id);
+  console.log(name);
   try {
     // Check if a sales order with the given id and name exists
     const existingOrder = await SalesForceSalesOrder.findOne({ id, name });
