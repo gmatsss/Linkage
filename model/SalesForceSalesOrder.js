@@ -7,6 +7,12 @@ const itemSchema = new mongoose.Schema({
   quantity: {
     type: Number,
   },
+  itemIdqbo: {
+    type: String,
+  },
+  ItemUnitprice: {
+    type: Number,
+  },
 });
 
 const salesForceSalesOrderSchema = new mongoose.Schema({

@@ -11,6 +11,7 @@ router.post("/createOrder", QobSalesorder.createSalesOrder);
 router.post("/checkopportunityfields", QobSalesorder.checkopportunityfields);
 router.get("/resyncSalesforce", QobSalesorder.resyncSalesforce);
 router.post("/saveItems", QobSalesorder.saveItems);
+router.post("/correctedline", QobSalesorder.correctedline);
 
 router.get("/checkInvoice", QobInvoice.checkInvoice);
 router.post("/checkinvoicefields", QobInvoice.checkinvoicefields);

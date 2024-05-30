@@ -268,12 +268,7 @@ const classes = [
 
 async function formatlineofitems(req, res) {
   try {
-    const { ItemId, UnitPrice, custID, qty, Classref, docnumber } = req.body;
-
-    const itemIds = ItemId.split(",").map((item) => item.trim()); // Split and trim item IDs
-    const unitPrices = UnitPrice.split(",").map((price) =>
-      parseFloat(price.trim())
-    );
+    const { custID, qty, Classref, docnumber, mongodb_id } = req.body;
 
     const lineItems = itemIds.map((itemId, index) => ({
       DetailType: "SalesItemLineDetail",
@@ -321,7 +316,6 @@ async function formatlineofitems(req, res) {
       DocNumber: incrementedDocNumber,
     };
 
-    console.log(response.DocNumber);
     res.json(response);
   } catch (error) {
     console.error("Error processing request:", error);
@@ -468,7 +462,6 @@ const getCustomerQuery = async (req, res) => {
 const resyncSalesforce = async (req, res) => {
   try {
     const opportunityId = req.query.opportunityId;
-    console.log(opportunityId);
 
     // Send POST request to Zapier webhook
     const response = await axios.post(
@@ -505,9 +498,6 @@ const saveItems = async (req, res) => {
   try {
     let { Sku, quantity } = req.body; // Expecting Sku and quantity arrays as strings
 
-    console.log("Received Sku:", Sku);
-    console.log("Received quantity:", quantity);
-
     // Convert strings to arrays
     if (typeof Sku === "string") {
       Sku = Sku.split(",").map((sku) => sku.trim().replace(/['"]+/g, ""));
@@ -523,22 +513,17 @@ const saveItems = async (req, res) => {
       !Array.isArray(quantity) ||
       Sku.length !== quantity.length
     ) {
-      console.log("Validation failed");
       return res.status(400).json({
         success: false,
         message: "Invalid SKU or quantity data",
       });
     }
 
-    console.log("Validation succeeded");
-
     // Map Sku and quantity arrays to items array
     const items = Sku.map((sku, index) => ({
       sku,
       quantity: quantity[index],
     }));
-
-    console.log("Mapped items:", items);
 
     // Create new sales order
     const salesOrder = new SalesForceSalesOrder({ items });
@@ -560,6 +545,10 @@ const saveItems = async (req, res) => {
   }
 };
 
+const correctedline = async (req, res) => {
+  console.log(req.body);
+};
+
 module.exports = {
   formatlineofitems,
   createSalesOrder,
@@ -568,4 +557,5 @@ module.exports = {
   getCustomerQuery,
   resyncSalesforce,
   saveItems,
+  correctedline,
 };
