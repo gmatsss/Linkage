@@ -10,6 +10,7 @@ router.post("/formatlineofitems", QobSalesorder.formatlineofitems);
 router.post("/createOrder", QobSalesorder.createSalesOrder);
 router.post("/checkopportunityfields", QobSalesorder.checkopportunityfields);
 router.get("/resyncSalesforce", QobSalesorder.resyncSalesforce);
+router.post("/saveItems", QobSalesorder.saveItems);
 
 router.get("/checkInvoice", QobInvoice.checkInvoice);
 router.post("/checkinvoicefields", QobInvoice.checkinvoicefields);

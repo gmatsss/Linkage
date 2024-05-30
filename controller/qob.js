@@ -1,5 +1,6 @@
 const SalesForceSalesOrder = require("../model/SalesForceSalesOrder");
 const axios = require("axios");
+const ItemSalesOrder = require("../model/itemSalesorder");
 
 const classes = [
   {
@@ -330,7 +331,7 @@ async function formatlineofitems(req, res) {
 }
 
 const createSalesOrder = async (req, res) => {
-  const { SalesOrderID: id, name, time } = req.body;
+  const { SalesOrderID: id, name } = req.body;
 
   try {
     // Check if a sales order with the given id already exists
@@ -351,7 +352,7 @@ const createSalesOrder = async (req, res) => {
     const newOrder = new SalesForceSalesOrder({
       id,
       name,
-      time,
+      time: currentDateTime,
     });
 
     await newOrder.save();
@@ -501,6 +502,50 @@ const resyncSalesforce = async (req, res) => {
   }
 };
 
+const saveItems = async (req, res) => {
+  try {
+    const { Sku, quantity } = req.body; // Expecting Sku and quantity arrays
+
+    // Validate input
+    if (
+      !Array.isArray(Sku) ||
+      !Array.isArray(quantity) ||
+      Sku.length !== quantity.length
+    ) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid SKU or quantity data" });
+    }
+
+    // Map Sku and quantity arrays to items array
+    const items = Sku.map((sku, index) => ({
+      sku,
+      quantity: quantity[index],
+    }));
+
+    // Upsert items in the database
+    const upsertPromises = items.map((item) =>
+      ItemSalesOrder.updateOne(
+        { sku: item.sku },
+        { $set: { quantity: item.quantity } },
+        { upsert: true }
+      )
+    );
+
+    await Promise.all(upsertPromises);
+
+    res
+      .status(200)
+      .json({ success: true, message: "Items saved successfully" });
+  } catch (error) {
+    console.error("Error saving items:", error);
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while saving items",
+    });
+  }
+};
+
 module.exports = {
   formatlineofitems,
   createSalesOrder,
@@ -508,4 +553,5 @@ module.exports = {
   getSalesOrderStatus,
   getCustomerQuery,
   resyncSalesforce,
+  saveItems,
 };
