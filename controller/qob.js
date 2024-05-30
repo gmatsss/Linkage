@@ -1,6 +1,5 @@
 const SalesForceSalesOrder = require("../model/SalesForceSalesOrder");
 const axios = require("axios");
-const ItemSalesOrder = require("../model/itemSalesorder");
 
 const classes = [
   {
@@ -525,9 +524,10 @@ const saveItems = async (req, res) => {
       Sku.length !== quantity.length
     ) {
       console.log("Validation failed");
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid SKU or quantity data" });
+      return res.status(400).json({
+        success: false,
+        message: "Invalid SKU or quantity data",
+      });
     }
 
     console.log("Validation succeeded");
@@ -540,25 +540,22 @@ const saveItems = async (req, res) => {
 
     console.log("Mapped items:", items);
 
-    // Upsert items in the database
-    const upsertPromises = items.map((item) =>
-      ItemSalesOrder.updateOne(
-        { sku: item.sku },
-        { $set: { quantity: item.quantity } },
-        { upsert: true }
-      )
-    );
+    // Create new sales order
+    const salesOrder = new ItemSalesOrder({ items });
 
-    await Promise.all(upsertPromises);
+    // Save the sales order and capture the saved document
+    const savedOrder = await salesOrder.save();
 
-    res
-      .status(200)
-      .json({ success: true, message: "Items saved successfully" });
+    res.status(200).json({
+      success: true,
+      message: "Sales order saved successfully",
+      _id: savedOrder._id,
+    });
   } catch (error) {
-    console.error("Error saving items:", error);
+    console.error("Error saving sales order:", error);
     res.status(500).json({
       success: false,
-      message: "An error occurred while saving items",
+      message: "An error occurred while saving the sales order",
     });
   }
 };
