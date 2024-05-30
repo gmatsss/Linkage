@@ -433,15 +433,26 @@ const getSalesOrderStatus = async (req, res) => {
     const currentDateTime = new Date().toISOString(); // Get the current date and time in ISO format
 
     if (existingOrder) {
-      return res.status(200).json({
-        message: "Sales order with this ID and name exists",
-        exists: true,
-        id: existingOrder.id,
-        name: existingOrder.name,
-        dateTime: currentDateTime, // Include the current date and time
-      });
+      if (existingOrder.saved) {
+        // If the sales order is marked as saved
+        return res.status(200).json({
+          message: "Sales order with this ID and name exists",
+          exists: true,
+          id: existingOrder.id,
+          name: existingOrder.name,
+          dateTime: currentDateTime, // Include the current date and time
+        });
+      } else {
+        // If the sales order exists but is not marked as saved
+        return res.status(200).json({
+          message: "Sales order with this ID and name does not exist",
+          exists: false,
+          dateTime: currentDateTime, // Include the current date and time
+        });
+      }
     }
 
+    // If no existing order found
     return res.status(200).json({
       message: "Sales order with this ID and name does not exist",
       exists: false,
@@ -551,7 +562,12 @@ const saveItems = async (req, res) => {
     }
 
     // If no existing sales order, create a new one
-    const salesOrder = new SalesForceSalesOrder({ id, name, items });
+    const salesOrder = new SalesForceSalesOrder({
+      id,
+      name,
+      items,
+      saved: false,
+    });
 
     // Save the new sales order and capture the saved document
     const savedOrder = await salesOrder.save();
