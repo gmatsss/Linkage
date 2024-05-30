@@ -283,8 +283,13 @@ const formatlineofitems = async (req, res) => {
     // Get today's date in YYYY-MM-DD format
     const today = new Date().toISOString().split("T")[0];
 
+    // Filter out items without itemIdqbo or ItemUnitprice
+    const validItems = items.filter(
+      (item) => item.itemIdqbo && item.ItemUnitprice
+    );
+
     // Map database items to lineItems
-    const lineItems = items.map((item) => ({
+    const lineItems = validItems.map((item) => ({
       DetailType: "SalesItemLineDetail",
       Amount: item.ItemUnitprice * item.quantity, // Calculate amount as UnitPrice * Qty
       SalesItemLineDetail: {
