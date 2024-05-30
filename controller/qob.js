@@ -592,8 +592,8 @@ const correctedline = async (req, res) => {
     salesOrder.items.forEach((item) => {
       const index = qboSkus.indexOf(item.sku);
       if (index !== -1) {
-        item.itemId = itemIds[index];
-        item.unitPrice = unitPrices[index];
+        item.itemIdqbo = itemIds[index];
+        item.ItemUnitprice = unitPrices[index];
       }
     });
 
