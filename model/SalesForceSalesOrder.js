@@ -16,14 +16,14 @@ const itemSchema = new mongoose.Schema({
 });
 
 const salesForceSalesOrderSchema = new mongoose.Schema({
-  id: {
+  Opportunity_id: {
     type: String,
   },
   time: {
     type: Date,
     default: Date.now,
   },
-  name: {
+  Opportunity_name: {
     type: String,
   },
   items: [itemSchema], // Adding items array to the schema
