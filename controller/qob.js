@@ -529,7 +529,8 @@ const saveItems = async (req, res) => {
     ) {
       return res.status(400).json({
         success: false,
-        message: "Invalid SKU or quantity data",
+        message:
+          "Invalid SKU or quantity data. Ensure both are arrays of the same length.",
       });
     }
 
@@ -539,10 +540,10 @@ const saveItems = async (req, res) => {
       quantity: quantity[index],
     }));
 
-    // Create new sales order without providing an existing ID or name
+    // Create a new sales order. This will not update an existing document.
     const salesOrder = new SalesForceSalesOrder({ items });
 
-    // Save the sales order and capture the saved document
+    // Save the new sales order and capture the saved document
     const savedOrder = await salesOrder.save();
 
     res.status(200).json({
@@ -554,7 +555,8 @@ const saveItems = async (req, res) => {
     console.error("Error saving sales order:", error);
     res.status(500).json({
       success: false,
-      message: "An error occurred while saving the sales order",
+      message:
+        "An error occurred while saving the sales order. Check server logs for more details.",
     });
   }
 };
