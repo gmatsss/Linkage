@@ -546,7 +546,72 @@ const saveItems = async (req, res) => {
 };
 
 const correctedline = async (req, res) => {
-  console.log(req.body);
+  try {
+    const { mongodb_id, ItemId, Unitprice, QBOsku } = req.body; // Expecting these fields in the request body
+
+    console.log("Received mongodb_id:", mongodb_id);
+    console.log("Received ItemId:", ItemId);
+    console.log("Received Unitprice:", Unitprice);
+    console.log("Received QBOsku:", QBOsku);
+
+    // Convert strings to arrays
+    const itemIds = ItemId.split(",").map((id) => id.trim());
+    const unitPrices = Unitprice.split(",").map((price) =>
+      parseFloat(price.trim())
+    );
+    const qboSkus = QBOsku.split(",").map((sku) => sku.trim());
+
+    // Validate input
+    if (
+      !mongodb_id ||
+      !Array.isArray(itemIds) ||
+      !Array.isArray(unitPrices) ||
+      !Array.isArray(qboSkus) ||
+      itemIds.length !== unitPrices.length ||
+      itemIds.length !== qboSkus.length
+    ) {
+      console.log("Validation failed");
+      return res.status(400).json({
+        success: false,
+        message: "Invalid data",
+      });
+    }
+
+    console.log("Validation succeeded");
+
+    // Find the document by mongodb_id
+    const salesOrder = await SalesForceSalesOrder.findById(mongodb_id);
+    if (!salesOrder) {
+      return res.status(404).json({
+        success: false,
+        message: "Sales order not found",
+      });
+    }
+
+    // Update items in the document
+    salesOrder.items.forEach((item) => {
+      const index = qboSkus.indexOf(item.sku);
+      if (index !== -1) {
+        item.itemId = itemIds[index];
+        item.unitPrice = unitPrices[index];
+      }
+    });
+
+    // Save the updated document
+    const updatedOrder = await salesOrder.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Sales order updated successfully",
+      updatedOrder,
+    });
+  } catch (error) {
+    console.error("Error updating sales order:", error);
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while updating the sales order",
+    });
+  }
 };
 
 module.exports = {
