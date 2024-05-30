@@ -506,8 +506,8 @@ const saveItems = async (req, res) => {
   try {
     const { Sku, quantity } = req.body; // Expecting Sku and quantity arrays
 
-    console.log(Sku);
-    console.log(quantity);
+    console.log("Received Sku:", Sku);
+    console.log("Received quantity:", quantity);
 
     // Validate input
     if (
@@ -515,16 +515,21 @@ const saveItems = async (req, res) => {
       !Array.isArray(quantity) ||
       Sku.length !== quantity.length
     ) {
+      console.log("Validation failed");
       return res
         .status(400)
         .json({ success: false, message: "Invalid SKU or quantity data" });
     }
+
+    console.log("Validation succeeded");
 
     // Map Sku and quantity arrays to items array
     const items = Sku.map((sku, index) => ({
       sku,
       quantity: quantity[index],
     }));
+
+    console.log("Mapped items:", items);
 
     // Upsert items in the database
     const upsertPromises = items.map((item) =>
