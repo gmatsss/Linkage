@@ -266,20 +266,34 @@ const classes = [
   },
 ];
 
-async function formatlineofitems(req, res) {
+const formatlineofitems = async (req, res) => {
   try {
-    const { custID, qty, Classref, docnumber, mongodb_id } = req.body;
+    const { custID, Classref, docnumber, mongodb_id } = req.body;
 
-    const lineItems = itemIds.map((itemId, index) => ({
+    const salesOrder = await SalesForceSalesOrder.findById(mongodb_id);
+    if (!salesOrder) {
+      return res.status(404).json({
+        success: false,
+        message: "Sales order not found",
+      });
+    }
+
+    const items = salesOrder.items;
+
+    // Get today's date in YYYY-MM-DD format
+    const today = new Date().toISOString().split("T")[0];
+
+    // Map database items to lineItems
+    const lineItems = items.map((item) => ({
       DetailType: "SalesItemLineDetail",
-      Amount: unitPrices[index] * qty[index], // Calculate amount as UnitPrice * Qty
+      Amount: item.ItemUnitprice * item.quantity, // Calculate amount as UnitPrice * Qty
       SalesItemLineDetail: {
-        ServiceDate: "2024-05-13", // will ask what is the date
+        ServiceDate: today, // Set ServiceDate to today's date
         ItemRef: {
-          value: itemId,
+          value: item.itemIdqbo,
         },
-        UnitPrice: unitPrices[index],
-        Qty: qty[index],
+        UnitPrice: item.ItemUnitprice,
+        Qty: item.quantity,
       },
     }));
 
@@ -321,7 +335,7 @@ async function formatlineofitems(req, res) {
     console.error("Error processing request:", error);
     res.status(500).send("An error occurred processing your request.");
   }
-}
+};
 
 const createSalesOrder = async (req, res) => {
   const { SalesOrderID: id, name } = req.body;
