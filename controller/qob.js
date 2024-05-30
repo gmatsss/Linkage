@@ -341,32 +341,29 @@ const createSalesOrder = async (req, res) => {
   const { SalesOrderID: id, name } = req.body;
 
   try {
-    // Check if a sales order with the given id already exists
-    const existingOrder = await SalesForceSalesOrder.findOne({ id });
     const currentDateTime = new Date().toISOString();
+    // Attempt to update an existing sales order or create a new one if it does not exist
+    const updatedOrder = await SalesForceSalesOrder.findOneAndUpdate(
+      { id, name }, // Find a document with both matching id and name
+      { $set: { saved: true, time: currentDateTime } }, // Set saved to true and update the time
+      { new: true, upsert: true } // Options: return the updated doc and create a new one if it does not exist
+    );
 
-    if (existingOrder) {
+    if (updatedOrder.saved) {
       return res.status(200).json({
-        message: "Sales order with this ID already exists",
+        message: "Sales order updated successfully",
         IsSaved: true,
+        id: updatedOrder.id,
+        name: updatedOrder.name,
         dateTime: currentDateTime,
-        id: existingOrder.id,
-        name: existingOrder.name,
+      });
+    } else {
+      // This branch should theoretically never be reached because saved is set to true above
+      return res.status(201).json({
+        message: "Sales order created and marked as saved",
+        IsSaved: true,
       });
     }
-
-    // Create a new sales order
-    const newOrder = new SalesForceSalesOrder({
-      id,
-      name,
-      time: currentDateTime,
-    });
-
-    await newOrder.save();
-    res.status(201).json({
-      message: "Sales order created successfully",
-      IsSaved: false,
-    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });
