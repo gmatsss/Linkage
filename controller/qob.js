@@ -506,6 +506,9 @@ const saveItems = async (req, res) => {
   try {
     const { Sku, quantity } = req.body; // Expecting Sku and quantity arrays
 
+    console.log(Sku);
+    console.log(quantity);
+
     // Validate input
     if (
       !Array.isArray(Sku) ||
