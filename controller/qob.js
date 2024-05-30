@@ -425,17 +425,15 @@ const checkopportunityfields = async (req, res) => {
 
 const getSalesOrderStatus = async (req, res) => {
   const { id, name } = req.query; // Using query parameters for the GET request
-  console.log(id);
-  console.log(name);
+
   try {
     // Check if a sales order with the given id and name exists
     const existingOrder = await SalesForceSalesOrder.findOne({ id, name });
 
-    console.log(existingOrder);
     const currentDateTime = new Date().toISOString(); // Get the current date and time in ISO format
 
     if (existingOrder) {
-      if (existingOrder.saved) {
+      if (existingOrder.saved === true) {
         return res.status(200).json({
           message: "Sales order with this ID and name exists",
           exists: true,
@@ -445,7 +443,7 @@ const getSalesOrderStatus = async (req, res) => {
         });
       } else {
         return res.status(200).json({
-          message: "Sales order with this ID and name does not exist",
+          message: "Sales order with this ID and name exist but not sync",
           exists: false,
           dateTime: currentDateTime,
         });
