@@ -27,6 +27,8 @@ const salesForceSalesOrderSchema = new mongoose.Schema({
     type: String,
   },
   items: [itemSchema], // Adding items array to the schema
+
+  saved: Boolean,
 });
 
 const SalesForceSalesOrder = mongoose.model(
