@@ -504,10 +504,19 @@ const resyncSalesforce = async (req, res) => {
 
 const saveItems = async (req, res) => {
   try {
-    const { Sku, quantity } = req.body; // Expecting Sku and quantity arrays
+    let { Sku, quantity } = req.body; // Expecting Sku and quantity arrays as strings
 
     console.log("Received Sku:", Sku);
     console.log("Received quantity:", quantity);
+
+    // Convert strings to arrays
+    if (typeof Sku === "string") {
+      Sku = Sku.split(",").map((sku) => sku.trim().replace(/['"]+/g, ""));
+    }
+
+    if (typeof quantity === "string") {
+      quantity = quantity.split(",").map((qty) => parseInt(qty.trim(), 10));
+    }
 
     // Validate input
     if (
