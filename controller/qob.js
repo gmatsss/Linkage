@@ -284,9 +284,7 @@ const formatlineofitems = async (req, res) => {
     const today = new Date().toISOString().split("T")[0];
 
     // Filter out items without itemIdqbo or ItemUnitprice
-    const validItems = items.filter(
-      (item) => item.itemIdqbo && item.ItemUnitprice
-    );
+    const validItems = items.filter((item) => item.itemIdqbo);
 
     // Map database items to lineItems
     const lineItems = validItems.map((item) => ({
