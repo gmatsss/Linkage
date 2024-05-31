@@ -567,14 +567,39 @@ const saveItems = async (req, res) => {
     // Check if a sales order with the same id already exists
     const existingOrder = await SalesForceSalesOrder.findOne({ id });
     if (existingOrder) {
+      // Check for SKUs that need to be removed
+      const existingSkus = existingOrder.items.map((item) => item.sku);
+      const skusToRemove = existingSkus.filter((sku) => !Sku.includes(sku));
+
+      // Remove items from existing order that are not present in the new SKU list
+      if (skusToRemove.length > 0) {
+        existingOrder.items = existingOrder.items.filter(
+          (item) => !skusToRemove.includes(item.sku)
+        );
+        await existingOrder.save();
+      }
+
+      // Update order with new or existing items
+      Sku.forEach((sku, index) => {
+        const itemIndex = existingOrder.items.findIndex(
+          (item) => item.sku === sku
+        );
+        if (itemIndex !== -1) {
+          existingOrder.items[itemIndex].quantity = quantity[index]; // Update quantity
+        } else {
+          existingOrder.items.push({ sku, quantity: quantity[index] }); // Add new item
+        }
+      });
+
+      await existingOrder.save();
       return res.status(200).json({
         success: true,
-        message: "Sales order already exists.",
+        message: "Sales order updated successfully",
         _id: existingOrder._id,
       });
     }
 
-    // If no existing sales order, create a new one
+    // If no existing order, create a new one
     const salesOrder = new SalesForceSalesOrder({
       id,
       name,
@@ -582,9 +607,7 @@ const saveItems = async (req, res) => {
       saved: false,
     });
 
-    // Save the new sales order and capture the saved document
     const savedOrder = await salesOrder.save();
-
     res.status(200).json({
       success: true,
       message: "Sales order saved successfully",
