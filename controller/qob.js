@@ -361,12 +361,13 @@ const createSalesOrder = async (req, res) => {
         id: updatedOrder.id,
         name: updatedOrder.name,
         dateTime: currentDateTime,
+        Exist: false,
       });
     } else {
       // This branch should theoretically never be reached because saved is set to true above
-      return res.status(201).json({
+      return res.status(200).json({
         message: "Sales order created and marked as saved",
-        IsSaved: true,
+        Exist: true,
       });
     }
   } catch (err) {
