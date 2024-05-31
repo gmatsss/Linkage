@@ -397,17 +397,25 @@ const checkopportunityfields = async (req, res) => {
     const currentDateTime = new Date().toISOString();
 
     const missingFields = fieldsToCheck.filter((field) => !req.body[field.key]);
-
     if (missingFields.length > 0) {
-      const missingFieldsLabels = missingFields.map((field) => field.label);
-      const message = `Missing required fields: ${missingFieldsLabels.join(
-        ", "
-      )}`;
+      let missingFieldsString = "";
+      const labels = missingFields.map((field) => field.label);
+      for (const label of labels) {
+        if ((missingFieldsString + label + ", ").length > 80) {
+          missingFieldsString = missingFieldsString.trim();
+          if (missingFieldsString.endsWith(",")) {
+            missingFieldsString = missingFieldsString.slice(0, -1);
+          }
+          missingFieldsString += "...";
+          break;
+        }
+        missingFieldsString += label + ", ";
+      }
 
       return res.status(200).json({
         success: false,
-        message: message,
-        missingFields: missingFieldsLabels,
+        message: "Some required fields are missing.",
+        missingFields: missingFieldsString,
         dateTime: currentDateTime,
       });
     }
