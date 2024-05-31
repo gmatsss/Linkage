@@ -347,29 +347,37 @@ const createSalesOrder = async (req, res) => {
 
   try {
     const currentDateTime = new Date().toISOString();
-    // Attempt to update an existing sales order or create a new one if it does not exist
-    const updatedOrder = await SalesForceSalesOrder.findOneAndUpdate(
-      { id, name }, // Find a document with both matching id and name
-      { $set: { saved: true, time: currentDateTime } }, // Set saved to true and update the time
-      { new: true, upsert: true } // Options: return the updated doc and create a new one if it does not exist
-    );
 
-    if (updatedOrder.saved) {
+    // Check if the order exists and is already saved
+    const existingOrder = await SalesForceSalesOrder.findOne({ id, name });
+
+    if (existingOrder && existingOrder.saved) {
+      // Order already exists and is saved, return relevant information
       return res.status(200).json({
-        message: "Sales order updated successfully",
+        message: "Sales order already updated and saved",
         IsSaved: true,
-        id: updatedOrder.id,
-        name: updatedOrder.name,
+        id: existingOrder.id,
+        name: existingOrder.name,
         dateTime: currentDateTime,
-        Exist: false,
-      });
-    } else {
-      // This branch should theoretically never be reached because saved is set to true above
-      return res.status(200).json({
-        message: "Sales order created and marked as saved",
         Exist: true,
       });
     }
+
+    // If order doesn't exist or isn't saved, update or create a new one
+    const updatedOrder = await SalesForceSalesOrder.findOneAndUpdate(
+      { id, name }, // Criteria to find the document
+      { $set: { saved: true, time: currentDateTime } }, // Set saved to true and update the time
+      { new: true, upsert: true } // Return the updated document and create a new one if it does not exist
+    );
+
+    return res.status(200).json({
+      message: "Sales order created or updated and marked as saved",
+      IsSaved: updatedOrder.saved,
+      id: updatedOrder.id,
+      name: updatedOrder.name,
+      dateTime: currentDateTime,
+      Exist: false,
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });
