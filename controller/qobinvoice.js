@@ -96,33 +96,41 @@ const checkAndCreateInvoice = async (req, res) => {
   const { id, name } = req.body;
 
   try {
-    const invoice = await SalesForceInv.findOne({ id, name });
-    const currentDateTime = new Date().toISOString(); // Get the current date and time in ISO format
+    const currentDateTime = new Date().toISOString();
 
-    if (invoice) {
-      res.json({
-        exist: true,
-        id: invoice.id,
-        name: invoice.name,
-        message:
-          "Opportunity invoice with this ID and name already exists. Please refrain from updating the sync invoice",
+    // Check if the order exists and is already saved
+    const existingOrder = await SalesForceInv.findOne({ id, name });
+
+    if (existingOrder && existingOrder.saved) {
+      // Order already exists and is saved, return relevant information
+      return res.status(200).json({
+        message: "Sales order already updated and saved",
+        IsSaved: true,
+        id: existingOrder.id,
+        name: existingOrder.name,
         dateTime: currentDateTime,
-      });
-    } else {
-      const newInvoice = new SalesForceInv({ id, name });
-      await newInvoice.save();
-      res.json({
-        exist: false,
-        message:
-          "Opportunity invoice with this ID and name does not exist. Created new invoice.",
-        id: newInvoice.id,
-        name: newInvoice.name,
-        dateTime: currentDateTime,
+        Exist: true,
       });
     }
-  } catch (error) {
-    console.error("Error checking or creating invoice:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+
+    // If order doesn't exist or isn't saved, update or create a new one
+    const updatedOrder = await SalesForceInv.findOneAndUpdate(
+      { id, name }, // Criteria to find the document
+      { $set: { saved: true, time: currentDateTime } }, // Set saved to true and update the time
+      { new: true, upsert: true } // Return the updated document and create a new one if it does not exist
+    );
+
+    return res.status(200).json({
+      message: "Sales order created or updated and marked as saved",
+      IsSaved: updatedOrder.saved,
+      id: updatedOrder.id,
+      name: updatedOrder.name,
+      dateTime: currentDateTime,
+      Exist: false,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
