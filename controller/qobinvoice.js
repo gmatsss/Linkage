@@ -393,22 +393,35 @@ const classes = [
 
 const formatlineofitemsinvoice = async (req, res) => {
   try {
-    const { ItemId, UnitPrice, custID, qty, Classref } = req.body;
-    const itemIds = ItemId.split(",").map((item) => item.trim()); // Split and trim item IDs
-    const unitPrices = UnitPrice.split(",").map((price) =>
-      parseFloat(price.trim())
-    );
+    const { custID, Classref, docnumber, mongodb_id } = req.body;
 
-    const lineItems = itemIds.map((itemId, index) => ({
+    const salesOrder = await SalesForceInv.findById(mongodb_id);
+    if (!salesOrder) {
+      return res.status(404).json({
+        success: false,
+        message: "Sales order not found",
+      });
+    }
+
+    const items = salesOrder.items;
+
+    // Get today's date in YYYY-MM-DD format
+    const today = new Date().toISOString().split("T")[0];
+
+    // Filter out items without itemIdqbo or ItemUnitprice
+    const validItems = items.filter((item) => item.itemIdqbo);
+
+    // Map database items to lineItems
+    const lineItems = validItems.map((item) => ({
       DetailType: "SalesItemLineDetail",
-      Amount: unitPrices[index] * qty[index], // Calculate amount as UnitPrice * Qty
+      Amount: item.ItemUnitprice * item.quantity, // Calculate amount as UnitPrice * Qty
       SalesItemLineDetail: {
-        ServiceDate: "2024-05-13", // will ask what is the date
+        ServiceDate: today, // Set ServiceDate to today's date
         ItemRef: {
-          value: itemId,
+          value: item.itemIdqbo,
         },
-        UnitPrice: unitPrices[index],
-        Qty: qty[index],
+        UnitPrice: item.ItemUnitprice,
+        Qty: item.quantity,
       },
     }));
 
@@ -420,12 +433,27 @@ const formatlineofitemsinvoice = async (req, res) => {
       ? { name: Classref, value: classMatch.Id }
       : { name: Classref, value: null };
 
+    if (!classMatch) {
+      return res.json({
+        success: false,
+        className: Classref,
+        message: "No class field available on QBO",
+      });
+    }
+
+    const incrementedDocNumber = (parseInt(docnumber, 10) + 1).toString();
+
     const response = {
       Line: lineItems,
       CustomerRef: {
         value: custID,
       },
+      TxnTaxDetail: {
+        TotalTax: 0,
+      },
+      ApplyTaxAfterDiscount: false,
       ClassRef: classRef,
+      DocNumber: incrementedDocNumber,
     };
 
     res.json(response);
