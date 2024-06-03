@@ -135,7 +135,7 @@ const checkAndCreateInvoice = async (req, res) => {
       id: updatedOrder.id,
       name: updatedOrder.name,
       dateTime: currentDateTime,
-      Exist: true,
+      Exist: false,
     });
   } catch (err) {
     console.error(err);
