@@ -470,10 +470,102 @@ const resyncSalesforceInvoice = async (req, res) => {
   }
 };
 
+const saveItemsInvoice = async (req, res) => {
+  try {
+    let { Sku, quantity, id, name } = req.body;
+
+    // Convert strings to arrays
+    if (typeof Sku === "string") {
+      Sku = Sku.split(",").map((sku) => sku.trim().replace(/['"]+/g, ""));
+    }
+
+    if (typeof quantity === "string") {
+      quantity = quantity.split(",").map((qty) => parseInt(qty.trim(), 10));
+    }
+
+    // Validate input
+    if (
+      !Array.isArray(Sku) ||
+      !Array.isArray(quantity) ||
+      Sku.length !== quantity.length
+    ) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Invalid SKU or quantity data. Ensure both are arrays of the same length.",
+      });
+    }
+
+    // Map Sku and quantity arrays to items array
+    const items = Sku.map((sku, index) => ({
+      sku,
+      quantity: quantity[index],
+    }));
+
+    // Check if a sales order with the same id already exists
+    const existingOrder = await SalesForceInv.findOne({ id });
+    if (existingOrder) {
+      // Check for SKUs that need to be removed
+      const existingSkus = existingOrder.items.map((item) => item.sku);
+      const skusToRemove = existingSkus.filter((sku) => !Sku.includes(sku));
+
+      // Remove items from existing order that are not present in the new SKU list
+      if (skusToRemove.length > 0) {
+        existingOrder.items = existingOrder.items.filter(
+          (item) => !skusToRemove.includes(item.sku)
+        );
+        await existingOrder.save();
+      }
+
+      // Update order with new or existing items
+      Sku.forEach((sku, index) => {
+        const itemIndex = existingOrder.items.findIndex(
+          (item) => item.sku === sku
+        );
+        if (itemIndex !== -1) {
+          existingOrder.items[itemIndex].quantity = quantity[index]; // Update quantity
+        } else {
+          existingOrder.items.push({ sku, quantity: quantity[index] }); // Add new item
+        }
+      });
+
+      await existingOrder.save();
+      return res.status(200).json({
+        success: true,
+        message: "Sales order updated successfully",
+        _id: existingOrder._id,
+      });
+    }
+
+    // If no existing order, create a new one
+    const salesOrder = new SalesForceInv({
+      id,
+      name,
+      items,
+      saved: false,
+    });
+
+    const savedOrder = await salesOrder.save();
+    res.status(200).json({
+      success: true,
+      message: "Sales order saved successfully",
+      _id: savedOrder._id,
+    });
+  } catch (error) {
+    console.error("Error saving sales order:", error);
+    res.status(500).json({
+      success: false,
+      message:
+        "An error occurred while saving the sales order. Check server logs for more details.",
+    });
+  }
+};
+
 module.exports = {
   checkInvoice,
   checkinvoicefields,
   checkAndCreateInvoice,
   formatlineofitemsinvoice,
   resyncSalesforceInvoice,
+  saveItemsInvoice,
 };
