@@ -1,27 +1,39 @@
 const SalesForceInv = require("../model/SalesForceInvoice");
 
-// Controller to check if an invoice exists
 const checkInvoice = async (req, res) => {
-  const { id, name } = req.query;
+  const { id, name } = req.query; // Using query parameters for the GET request
 
   try {
     const invoice = await SalesForceInv.findOne({ id, name });
     const currentDateTime = new Date().toISOString(); // Get the current date and time in ISO format
 
     if (invoice) {
-      res.json({
-        exist: true,
-        id: invoice.id,
-        name: invoice.name,
-        message: "Opportunity invoice with this ID and name exists",
-        dateTime: currentDateTime,
-      });
-    } else {
-      res.json({ exist: false, dateTime: currentDateTime });
+      if (invoice.saved === true) {
+        return res.status(200).json({
+          message: "Opportunity invoice with this ID and name exists",
+          exists: true,
+          id: invoice.id,
+          name: invoice.name,
+          dateTime: currentDateTime,
+        });
+      } else {
+        return res.status(200).json({
+          message:
+            "Opportunity invoice with this ID and name exist but not sync",
+          exists: false,
+          dateTime: currentDateTime,
+        });
+      }
     }
+
+    return res.status(200).json({
+      message: "Opportunity invoice with this ID and name does not exist",
+      exists: false,
+      dateTime: currentDateTime,
+    });
   } catch (error) {
     console.error("Error checking invoice:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
@@ -418,9 +430,45 @@ const formatlineofitemsinvoice = async (req, res) => {
   }
 };
 
+const resyncSalesforceInvoice = async (req, res) => {
+  try {
+    const opportunityId = req.query.opportunityId;
+
+    // Send POST request to Zapier webhook
+    const response = await axios.post(
+      "https://hooks.zapier.com/hooks/catch/775472/3vm62gm/",
+      { opportunityId }
+    );
+
+    if (response.status === 200) {
+      // If POST request is successful, send an alert and close the tab
+      res.send(`
+        <script>
+          alert('Request Sync Sent Please Check the logs.');
+          window.close();
+        </script>
+      `);
+    } else {
+      res.send(`
+        <script>
+          alert('Re-sync failed.');
+        </script>
+      `);
+    }
+  } catch (error) {
+    console.error(error);
+    res.send(`
+      <script>
+        alert('An error occurred.');
+      </script>
+    `);
+  }
+};
+
 module.exports = {
   checkInvoice,
   checkinvoicefields,
   checkAndCreateInvoice,
   formatlineofitemsinvoice,
+  resyncSalesforceInvoice,
 };
