@@ -104,7 +104,7 @@ const checkAndCreateInvoice = async (req, res) => {
 
     if (!existingOrder) {
       return res.status(404).json({
-        message: "Sales order not found",
+        message: "Invoice not found",
         Exist: false,
         dateTime: currentDateTime,
       });
@@ -113,7 +113,7 @@ const checkAndCreateInvoice = async (req, res) => {
     if (existingOrder.saved) {
       // Order already exists and is saved, return relevant information
       return res.status(200).json({
-        message: "Sales order already updated and saved",
+        message: "Invoice already updated and saved",
         IsSaved: true,
         id: existingOrder.id,
         name: existingOrder.name,
@@ -130,7 +130,7 @@ const checkAndCreateInvoice = async (req, res) => {
     );
 
     return res.status(200).json({
-      message: "Sales order updated and marked as saved",
+      message: "Invoice updated and marked as saved",
       IsSaved: updatedOrder.saved,
       id: updatedOrder.id,
       name: updatedOrder.name,
@@ -416,7 +416,7 @@ const formatlineofitemsinvoice = async (req, res) => {
     if (!salesOrder) {
       return res.status(404).json({
         success: false,
-        message: "Sales order not found",
+        message: "Invoice not found",
       });
     }
 
@@ -547,7 +547,7 @@ const saveItemsInvoice = async (req, res) => {
       quantity: quantity[index],
     }));
 
-    // Check if a sales order with the same id already exists
+    // Check if a Invoice with the same id already exists
     const existingOrder = await SalesForceInv.findOne({ id });
     if (existingOrder) {
       // Check for SKUs that need to be removed
@@ -577,7 +577,7 @@ const saveItemsInvoice = async (req, res) => {
       await existingOrder.save();
       return res.status(200).json({
         success: true,
-        message: "Sales order updated successfully",
+        message: "Invoice updated successfully",
         _id: existingOrder._id,
       });
     }
@@ -593,15 +593,15 @@ const saveItemsInvoice = async (req, res) => {
     const savedOrder = await salesOrder.save();
     res.status(200).json({
       success: true,
-      message: "Sales order saved successfully",
+      message: "Invoice saved successfully",
       _id: savedOrder._id,
     });
   } catch (error) {
-    console.error("Error saving sales order:", error);
+    console.error("Error saving Invoice:", error);
     res.status(500).json({
       success: false,
       message:
-        "An error occurred while saving the sales order. Check server logs for more details.",
+        "An error occurred while saving the Invoice. Check server logs for more details.",
     });
   }
 };
@@ -635,7 +635,7 @@ const correctedlineInvoice = async (req, res) => {
     if (!salesOrder) {
       return res.status(404).json({
         success: false,
-        message: "Sales order not found",
+        message: "Invoice not found",
       });
     }
 
@@ -665,14 +665,14 @@ const correctedlineInvoice = async (req, res) => {
     const updatedOrder = await salesOrder.save();
     res.status(200).json({
       success: true,
-      message: "Sales order updated successfully",
+      message: "Invoice updated successfully",
       updatedOrder,
     });
   } catch (error) {
-    console.error("Error updating sales order:", error);
+    console.error("Error updating Invoice:", error);
     res.status(500).json({
       success: false,
-      message: "Error updating sales order",
+      message: "Error updating Invoice",
     });
   }
 };
