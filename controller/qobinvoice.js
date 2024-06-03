@@ -39,7 +39,6 @@ const checkInvoice = async (req, res) => {
 
 const checkinvoicefields = async (req, res) => {
   try {
-    // Define the fields to check and their human-readable labels
     const fieldsToCheck = [
       { key: "PriceBook", label: "Price Book" },
       { key: "CloseDate", label: "Close Date" },
@@ -48,6 +47,12 @@ const checkinvoicefields = async (req, res) => {
       { key: "ShippingCity", label: "Shipping City" },
       { key: "ShippingState", label: "Shipping State" },
       { key: "ShippingZip", label: "Shipping Zip" },
+      { key: "ShippingCountry", label: "Shipping Country" },
+      { key: "BillingStreet", label: "Billing Street" },
+      { key: "BillingCity", label: "Billing City" },
+      { key: "BillingState", label: "Billing State" },
+      { key: "BillingZip", label: "Billing Zip" },
+      { key: "BillingCountry", label: "Billing Country" },
       { key: "ClassField", label: "Class Field" },
       { key: "PO_Number", label: "PO Number" },
       { key: "Terms", label: "Terms" },
