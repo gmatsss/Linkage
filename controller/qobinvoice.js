@@ -98,10 +98,18 @@ const checkAndCreateInvoice = async (req, res) => {
   try {
     const currentDateTime = new Date().toISOString();
 
-    // Check if the order exists and is already saved
+    // Check if the order exists
     const existingOrder = await SalesForceInv.findOne({ id, name });
 
-    if (existingOrder && existingOrder.saved) {
+    if (!existingOrder) {
+      return res.status(404).json({
+        message: "Sales order not found",
+        Exist: false,
+        dateTime: currentDateTime,
+      });
+    }
+
+    if (existingOrder.saved) {
       // Order already exists and is saved, return relevant information
       return res.status(200).json({
         message: "Sales order already updated and saved",
@@ -113,20 +121,20 @@ const checkAndCreateInvoice = async (req, res) => {
       });
     }
 
-    // If order doesn't exist or isn't saved, update or create a new one
+    // If order exists but isn't saved, update it
     const updatedOrder = await SalesForceInv.findOneAndUpdate(
       { id, name }, // Criteria to find the document
       { $set: { saved: true, time: currentDateTime } }, // Set saved to true and update the time
-      { new: true, upsert: true } // Return the updated document and create a new one if it does not exist
+      { new: true } // Return the updated document
     );
 
     return res.status(200).json({
-      message: "Sales order created or updated and marked as saved",
+      message: "Sales order updated and marked as saved",
       IsSaved: updatedOrder.saved,
       id: updatedOrder.id,
       name: updatedOrder.name,
       dateTime: currentDateTime,
-      Exist: false,
+      Exist: true,
     });
   } catch (err) {
     console.error(err);
