@@ -561,6 +561,77 @@ const saveItemsInvoice = async (req, res) => {
   }
 };
 
+const correctedlineInvoice = async (req, res) => {
+  try {
+    const { mongodb_id, ItemId, Unitprice, QBOsku } = req.body;
+
+    const itemIds = ItemId.split(",").map((id) => id.trim());
+    const unitPrices = Unitprice.split(",").map((price) =>
+      parseFloat(price.trim())
+    );
+    const qboSkus = QBOsku.split(",").map((sku) => sku.trim());
+
+    // Validate input
+    if (
+      !mongodb_id ||
+      !Array.isArray(itemIds) ||
+      !Array.isArray(unitPrices) ||
+      !Array.isArray(qboSkus) ||
+      itemIds.length !== unitPrices.length ||
+      itemIds.length !== qboSkus.length
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid data",
+      });
+    }
+
+    const salesOrder = await SalesForceInv.findById(mongodb_id);
+    if (!salesOrder) {
+      return res.status(404).json({
+        success: false,
+        message: "Sales order not found",
+      });
+    }
+
+    // Collect SKUs that do not match any in the database
+    const unmatchedSkus = [];
+
+    salesOrder.items.forEach((item) => {
+      const index = qboSkus.indexOf(item.sku);
+      if (index !== -1) {
+        item.itemIdqbo = itemIds[index];
+        item.ItemUnitprice = unitPrices[index];
+      } else {
+        unmatchedSkus.push(item.sku);
+      }
+    });
+
+    // Check if there are unmatched SKUs
+    if (unmatchedSkus.length > 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Some products are not available on QBO",
+        unmatchedSkus,
+      });
+    }
+
+    // Save the updated document
+    const updatedOrder = await salesOrder.save();
+    res.status(200).json({
+      success: true,
+      message: "Sales order updated successfully",
+      updatedOrder,
+    });
+  } catch (error) {
+    console.error("Error updating sales order:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error updating sales order",
+    });
+  }
+};
+
 module.exports = {
   checkInvoice,
   checkinvoicefields,
@@ -568,4 +639,5 @@ module.exports = {
   formatlineofitemsinvoice,
   resyncSalesforceInvoice,
   saveItemsInvoice,
+  correctedlineInvoice,
 };

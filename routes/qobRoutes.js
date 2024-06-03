@@ -19,5 +19,6 @@ router.post("/checkAndCreateInvoice", QobInvoice.checkAndCreateInvoice);
 router.post("/formatlineofitemsinvoice", QobInvoice.formatlineofitemsinvoice);
 router.get("/resyncSalesforceInvoice", QobInvoice.resyncSalesforceInvoice);
 router.post("/saveItemsInvoice", QobInvoice.saveItemsInvoice);
+router.post("/correctedlineInvoice", QobInvoice.correctedlineInvoice);
 
 module.exports = router;
