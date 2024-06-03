@@ -457,7 +457,7 @@ const formatlineofitemsinvoice = async (req, res) => {
       });
     }
 
-    const incrementedDocNumber = (parseInt(docnumber, 10) + 2).toString();
+    const incrementedDocNumber = (parseInt(docnumber, 10) + 1).toString();
 
     const response = {
       Line: lineItems,
