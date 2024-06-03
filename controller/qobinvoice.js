@@ -94,7 +94,8 @@ const checkinvoicefields = async (req, res) => {
 
 const checkAndCreateInvoice = async (req, res) => {
   const { id, name } = req.body;
-
+  console.log(id);
+  console.log(name);
   try {
     const currentDateTime = new Date().toISOString();
 
