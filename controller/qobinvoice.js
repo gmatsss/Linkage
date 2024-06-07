@@ -458,7 +458,7 @@ const formatlineofitemsinvoice = async (req, res) => {
       });
     }
 
-    const incrementedDocNumber = (parseInt(docnumber, 10) + 1).toString();
+    const randomizedDocNumber = randomizeDocNumber(docnumber);
 
     const response = {
       Line: lineItems,
@@ -470,7 +470,7 @@ const formatlineofitemsinvoice = async (req, res) => {
       },
       ApplyTaxAfterDiscount: false,
       ClassRef: classRef,
-      DocNumber: incrementedDocNumber,
+      DocNumber: randomizedDocNumber,
     };
 
     res.json(response);
@@ -479,6 +479,15 @@ const formatlineofitemsinvoice = async (req, res) => {
     res.status(500).send("An error occurred processing your request.");
   }
 };
+
+function randomizeDocNumber(docnumber) {
+  const length = docnumber.length;
+  let randomNumber = "";
+  for (let i = 0; i < length; i++) {
+    randomNumber += Math.floor(Math.random() * 10).toString();
+  }
+  return randomNumber;
+}
 
 const resyncSalesforceInvoice = async (req, res) => {
   try {
