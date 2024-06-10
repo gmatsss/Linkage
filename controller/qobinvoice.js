@@ -458,7 +458,7 @@ const formatlineofitemsinvoice = async (req, res) => {
       });
     }
 
-    const incrementedDocNumber = Number(docnumber) + 1;
+    const incrementedDocNumber = incrementDocNumber(docnumber);
 
     const response = {
       Line: lineItems,
@@ -480,6 +480,25 @@ const formatlineofitemsinvoice = async (req, res) => {
     res.status(500).send("An error occurred processing your request.");
   }
 };
+
+function incrementDocNumber(docNumber) {
+  // This regex separates the alphabetic prefix from the numeric suffix.
+  const match = docNumber.match(/^([A-Za-z]*)(\d+)$/);
+  if (match) {
+    const prefix = match[1]; // The alphabetic part ("R")
+    const number = parseInt(match[2], 10); // The numeric part (36751)
+
+    // Increment the numeric part
+    const incrementedNumber = number + 1;
+
+    // Combine them back into the full document number
+    return `${prefix}${incrementedNumber}`;
+  } else {
+    // Handle case where docNumber does not fit the expected pattern
+    console.error("Document number does not fit the expected format");
+    return null; // Or handle this case as needed
+  }
+}
 
 const resyncSalesforceInvoice = async (req, res) => {
   try {
