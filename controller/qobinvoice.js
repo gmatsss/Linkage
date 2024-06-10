@@ -410,7 +410,7 @@ const classes = [
 
 const formatlineofitemsinvoice = async (req, res) => {
   try {
-    const { custID, Classref, docnumber, mongodb_id } = req.body;
+    const { custID, Classref, docnumber, mongodb_id, Closed_date } = req.body;
 
     const salesOrder = await SalesForceInv.findById(mongodb_id);
     if (!salesOrder) {
@@ -421,19 +421,19 @@ const formatlineofitemsinvoice = async (req, res) => {
     }
 
     const items = salesOrder.items;
-
-    // Get today's date in YYYY-MM-DD format
-    const today = new Date().toISOString().split("T")[0];
+    const closedDate = Closed_date;
 
     // Filter out items without itemIdqbo or ItemUnitprice
-    const validItems = items.filter((item) => item.itemIdqbo);
+    const validItems = items.filter(
+      (item) => item.itemIdqbo && item.ItemUnitprice
+    );
 
     // Map database items to lineItems
     const lineItems = validItems.map((item) => ({
       DetailType: "SalesItemLineDetail",
       Amount: item.ItemUnitprice * item.quantity, // Calculate amount as UnitPrice * Qty
       SalesItemLineDetail: {
-        ServiceDate: today, // Set ServiceDate to today's date
+        ServiceDate: closedDate || new Date().toISOString().split("T")[0], // Use Closed_date, or today's date if not available
         ItemRef: {
           value: item.itemIdqbo,
         },
@@ -458,7 +458,7 @@ const formatlineofitemsinvoice = async (req, res) => {
       });
     }
 
-    const randomizedDocNumber = randomizeDocNumber(docnumber);
+    const incrementedDocNumber = Number(docnumber) + 1;
 
     const response = {
       Line: lineItems,
@@ -470,7 +470,7 @@ const formatlineofitemsinvoice = async (req, res) => {
       },
       ApplyTaxAfterDiscount: false,
       ClassRef: classRef,
-      DocNumber: randomizedDocNumber,
+      DocNumber: incrementedDocNumber.toString(),
     };
 
     res.json(response);
@@ -479,15 +479,6 @@ const formatlineofitemsinvoice = async (req, res) => {
     res.status(500).send("An error occurred processing your request.");
   }
 };
-
-function randomizeDocNumber(docnumber) {
-  const length = docnumber.length;
-  let randomNumber = "";
-  for (let i = 0; i < length; i++) {
-    randomNumber += Math.floor(Math.random() * 10).toString();
-  }
-  return randomNumber;
-}
 
 const resyncSalesforceInvoice = async (req, res) => {
   try {
