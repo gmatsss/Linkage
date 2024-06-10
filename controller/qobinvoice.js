@@ -468,6 +468,7 @@ const formatlineofitemsinvoice = async (req, res) => {
       TxnTaxDetail: {
         TotalTax: 0,
       },
+      TxnDate: closedDate,
       ApplyTaxAfterDiscount: false,
       ClassRef: classRef,
       DocNumber: incrementedDocNumber.toString(),
