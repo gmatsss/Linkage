@@ -423,17 +423,17 @@ const formatlineofitemsinvoice = async (req, res) => {
     const items = salesOrder.items;
     const closedDate = Closed_date;
 
-    // Filter out items without itemIdqbo or ItemUnitprice
+ 
     const validItems = items.filter(
-      (item) => item.itemIdqbo && item.ItemUnitprice
+      (item) => item.itemIdqbo 
     );
 
     // Map database items to lineItems
     const lineItems = validItems.map((item) => ({
       DetailType: "SalesItemLineDetail",
-      Amount: item.ItemUnitprice * item.quantity, // Calculate amount as UnitPrice * Qty
+      Amount: item.ItemUnitprice * item.quantity, /
       SalesItemLineDetail: {
-        ServiceDate: closedDate || new Date().toISOString().split("T")[0], // Use Closed_date, or today's date if not available
+        ServiceDate: closedDate || new Date().toISOString().split("T")[0], 
         ItemRef: {
           value: item.itemIdqbo,
         },
@@ -458,6 +458,7 @@ const formatlineofitemsinvoice = async (req, res) => {
       });
     }
 
+    // latest invoice 1447929
     const incrementedDocNumber = incrementDocNumber(docnumber);
 
     const response = {
