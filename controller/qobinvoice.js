@@ -500,12 +500,12 @@ function incrementDocNumber(docNumber) {
 
 const resyncSalesforceInvoice = async (req, res) => {
   try {
-    const opportunityId = req.query.opportunityId;
+    const Invoiceid = req.query.opportunityId;
 
     // Send POST request to Zapier webhook
     const response = await axios.post(
-      "https://hooks.zapier.com/hooks/catch/775472/3vm62gm/",
-      { opportunityId }
+      "https://hooks.zapier.com/hooks/catch/775472/2ohrr7f/",
+      { Invoiceid }
     );
 
     if (response.status === 200) {
