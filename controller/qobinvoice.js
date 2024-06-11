@@ -423,17 +423,14 @@ const formatlineofitemsinvoice = async (req, res) => {
     const items = salesOrder.items;
     const closedDate = Closed_date;
 
- 
-    const validItems = items.filter(
-      (item) => item.itemIdqbo 
-    );
+    const validItems = items.filter((item) => item.itemIdqbo);
 
     // Map database items to lineItems
     const lineItems = validItems.map((item) => ({
       DetailType: "SalesItemLineDetail",
-      Amount: item.ItemUnitprice * item.quantity, /
+      Amount: item.ItemUnitprice * item.quantity,
       SalesItemLineDetail: {
-        ServiceDate: closedDate || new Date().toISOString().split("T")[0], 
+        ServiceDate: closedDate || new Date().toISOString().split("T")[0],
         ItemRef: {
           value: item.itemIdqbo,
         },
