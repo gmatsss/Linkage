@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const callRoutes = require("./routes/twilio");
 const callRouteslink = require("./routes/twiliolink");
 const qobRoutes = require("./routes/qobRoutes");
+const firefliesRoutes = require("./routes/fireflies");
 const connectDB = require("./db");
 
 const app = express();
@@ -21,6 +22,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/twilio", callRoutes);
 app.use("/callRouteslink", callRouteslink);
 app.use("/qobRoutes", qobRoutes);
+app.use("/fireflies", firefliesRoutes);
 
 // Simple route for root to check if server is running
 app.get("/", (req, res) => {
