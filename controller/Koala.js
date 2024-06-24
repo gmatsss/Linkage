@@ -2,21 +2,21 @@ const axios = require("axios");
 
 exports.koalaArticles = async (req, res) => {
   const apiUrl = "https://koala.sh/api/articles/";
-  const apiKey = "YOUR_API_KEY";
+  const apiKey = "4c2d075a-b36e-4d45-8198-59b4fe55ae98";
 
+  const { title, keywords } = req.body;
   try {
     const response = await axios.post(
       apiUrl,
       {
-        extraTitlePrompt: "",
-        targetKeyword: "can you eat watermelon seeds?",
-        webhookUrl: "",
+        extraTitlePrompt: title,
+        targetKeyword: keywords,
+        webhookUrl: "https://hooks.zapier.com/hooks/catch/775472/2b9ia20/",
         gptVersion: "gpt-4o",
         articleType: "blog_post",
         language: "English",
         toneOfVoiceProfile: "Friendly",
         includeFaq: true,
-        readabilityMode: "8th_grade",
         shouldCiteSources: true,
         seoOptimizationLevel: "ai_powered",
         includeKeyTakeaways: true,

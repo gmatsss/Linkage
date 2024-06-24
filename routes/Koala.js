@@ -2,6 +2,6 @@ const express = require("express");
 const router = express.Router();
 const { koalaArticles } = require("../controller/Koala");
 
-router.get("/indeed", koalaArticles);
+router.get("/createarticel", koalaArticles);
 
 module.exports = router;
