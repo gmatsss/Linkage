@@ -4,18 +4,19 @@ exports.koalaArticles = async (req, res) => {
   const apiUrl = "https://koala.sh/api/articles/";
   const apiKey = "4c2d075a-b36e-4d45-8198-59b4fe55ae98";
 
-  const { title, keywords } = req.body;
+  const { title, keywords, articleLength, toneOfVoice, articleType } = req.body;
   try {
     const response = await axios.post(
       apiUrl,
       {
         extraTitlePrompt: title,
         targetKeyword: keywords,
+        articleLength: articleLength,
+        toneOfVoiceProfile: toneOfVoice,
+        articleType: articleType,
         webhookUrl: "https://hooks.zapier.com/hooks/catch/775472/2b9ia20/",
         gptVersion: "gpt-4o",
-        articleType: "blog_post",
         language: "English",
-        toneOfVoiceProfile: "Friendly",
         includeFaq: true,
         shouldCiteSources: true,
         seoOptimizationLevel: "ai_powered",
@@ -26,6 +27,9 @@ exports.koalaArticles = async (req, res) => {
         maxImages: 3,
         maxVideos: 3,
         imageSize: "medium",
+        realTimeData: true,
+        shouldCiteSources: true,
+        readabilityMode: "8th_grade",
       },
       {
         headers: {
