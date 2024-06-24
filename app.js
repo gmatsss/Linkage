@@ -18,14 +18,12 @@ app.use(bodyParser.json());
 // Middleware for parsing application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Mounting the Twilio routes
 app.use("/twilio", callRoutes);
 app.use("/callRouteslink", callRouteslink);
 app.use("/qobRoutes", qobRoutes);
 app.use("/fireflies", firefliesRoutes);
 app.use("/koala", koalaRoutes);
 
-// Simple route for root to check if server is running
 app.get("/", (req, res) => {
   res.send("Server is running!");
 });
