@@ -21,7 +21,7 @@ exports.koalaArticles = async (req, res) => {
         seoOptimizationLevel: "ai_powered",
         includeKeyTakeaways: true,
         country: "USA",
-        multimediaOption: "images",
+        multimediaOption: "auto",
         imageStyle: "photo",
         maxImages: 3,
         maxVideos: 3,
