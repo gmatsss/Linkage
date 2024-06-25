@@ -2,7 +2,7 @@ const axios = require("axios");
 
 exports.koalaArticles = async (req, res) => {
   const apiUrl = "https://koala.sh/api/articles/";
-  const apiKey = "4c2d075a-b36e-4d45-8198-59b4fe55ae98";
+  const apiKey = process.env.KOALA_API_KEY;
 
   const { title, keywords, articleLength, toneOfVoice, articleType } = req.body;
   try {
@@ -42,7 +42,7 @@ exports.koalaArticles = async (req, res) => {
     res.json({
       success: true,
       articleId: response.data.articleId,
-      message: "Article successfully created in Koala.",
+      message: "Article in Progress please wait for a while",
     });
   } catch (error) {
     res.status(500).json({
