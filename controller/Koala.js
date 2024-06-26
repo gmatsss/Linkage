@@ -52,10 +52,13 @@ exports.koalaArticles = async (req, res) => {
       }
     );
 
+    // Log the response
+    console.log("Koala API Response:", response.data);
+
     res.json({
       success: true,
       articleId: response.data.articleId,
-      message: "Article in Progress please wait for a while",
+      message: "Article in Progress, please wait for a while",
     });
   } catch (error) {
     res.status(500).json({
