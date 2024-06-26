@@ -57,7 +57,8 @@ exports.koalaArticles = async (req, res) => {
     res.json({
       success: true,
       articleId: response.data.articleId,
-      message: "Article in Progress, please wait for a while",
+      message:
+        "Article in Progress, please wait for a while dont change any cells as the automations are working",
     });
   } catch (error) {
     res.status(500).json({
