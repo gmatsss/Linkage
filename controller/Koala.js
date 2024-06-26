@@ -52,7 +52,6 @@ exports.koalaArticles = async (req, res) => {
       }
     );
 
-    // Log the response
     console.log("Koala API Response:", response.data);
 
     res.json({
