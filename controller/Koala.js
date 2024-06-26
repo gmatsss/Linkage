@@ -55,7 +55,7 @@ exports.koalaArticles = async (req, res) => {
       }
     );
 
-    console.log("Koala API Response:", response);
+    console.log("Koala API Response:", response.data);
 
     res.json({
       success: true,
@@ -64,7 +64,7 @@ exports.koalaArticles = async (req, res) => {
         "Article in Progress, please wait for a while dont change any cells as the automations are working",
     });
   } catch (error) {
-    res.status(500).json({
+    res.status(200).json({
       success: false,
       message: "Failed to create article in Koala.",
       error: error.message,
