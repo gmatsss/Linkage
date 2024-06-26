@@ -4,7 +4,19 @@ exports.koalaArticles = async (req, res) => {
   const apiUrl = "https://koala.sh/api/articles/";
   const apiKey = process.env.KOALA_API_KEY;
 
-  const { title, keywords, articleLength, toneOfVoice, articleType } = req.body;
+  const {
+    title,
+    keywords,
+    articleLength,
+    toneOfVoice,
+    articleType,
+    maxImages,
+    maxVideos,
+    realTimeData,
+    includeKeyTakeaways,
+    includeFaq,
+    readabilityMode,
+  } = req.body;
   try {
     const response = await axios.post(
       apiUrl,
@@ -14,22 +26,23 @@ exports.koalaArticles = async (req, res) => {
         articleLength: articleLength,
         toneOfVoiceProfile: toneOfVoice,
         articleType: articleType,
+        maxImages: maxImages,
+        maxVideos: maxVideos,
+
+        realTimeData: realTimeData || false,
+        includeKeyTakeaways: includeKeyTakeaways || false,
+        includeFaq: includeFaq || false,
+        readabilityMode: readabilityMode ? "8th_grade" : "default",
+
+        shouldCiteSources: true,
         webhookUrl: "https://hooks.zapier.com/hooks/catch/775472/2b9ia20/",
         gptVersion: "gpt-4o",
         language: "English",
-        includeFaq: true,
-        shouldCiteSources: true,
         seoOptimizationLevel: "ai_powered",
-        includeKeyTakeaways: true,
         country: "USA",
         multimediaOption: "auto",
         imageStyle: "photo",
-        maxImages: 3,
-        maxVideos: 3,
         imageSize: "medium",
-        realTimeData: true,
-        shouldCiteSources: true,
-        readabilityMode: "8th_grade",
       },
       {
         headers: {
