@@ -17,13 +17,16 @@ exports.koalaArticles = async (req, res) => {
     includeFaq,
     readabilityMode,
   } = req.body;
+
+  const extractedArticleLength = articleLength.split(" ")[0];
+
   try {
     const response = await axios.post(
       apiUrl,
       {
         extraTitlePrompt: title,
         targetKeyword: keywords,
-        articleLength: articleLength,
+        articleLength: extractedArticleLength,
         toneOfVoiceProfile: toneOfVoice,
         articleType: articleType,
         maxImages: maxImages,
@@ -52,7 +55,7 @@ exports.koalaArticles = async (req, res) => {
       }
     );
 
-    console.log("Koala API Response:", response.data);
+    console.log("Koala API Response:", response);
 
     res.json({
       success: true,
