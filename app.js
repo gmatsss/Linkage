@@ -6,6 +6,7 @@ const callRouteslink = require("./routes/twiliolink");
 const qobRoutes = require("./routes/qobRoutes");
 const firefliesRoutes = require("./routes/fireflies");
 const koalaRoutes = require("./routes/Koala");
+const QBORoutes = require("./routes/QBOroutepat");
 const connectDB = require("./db");
 
 const app = express();
@@ -22,6 +23,7 @@ app.use("/twilio", callRoutes);
 app.use("/callRouteslink", callRouteslink);
 app.use("/qobRoutes", qobRoutes);
 app.use("/fireflies", firefliesRoutes);
+app.use("/QBO", QBORoutes);
 app.use("/koala", koalaRoutes);
 
 app.get("/", (req, res) => {
