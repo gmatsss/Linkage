@@ -11,3 +11,11 @@ exports.handleCallback = async (req, res) => {
     res.status(500).send("Error handling callback");
   }
 };
+
+exports.initiateAuth = (req, res) => {
+  const authUri = oauthClient.authorizeUri({
+    scope: [OAuthClient.scopes.Accounting, OAuthClient.scopes.OpenId],
+    state: "intuit_csrf_token",
+  });
+  res.redirect(authUri);
+};

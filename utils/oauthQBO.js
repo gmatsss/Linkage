@@ -9,7 +9,6 @@ const oauthClient = new OAuthClient({
   redirectUri: "http://3.80.93.16:8002/QBO/callback",
 });
 
-// Function to load the token from a file
 const loadToken = () => {
   try {
     const tokenData = fs.readFileSync(path.join(__dirname, "token.json"));
@@ -20,7 +19,6 @@ const loadToken = () => {
   }
 };
 
-// Function to save the token to a file
 const saveToken = (token) => {
   try {
     fs.writeFileSync(path.join(__dirname, "token.json"), JSON.stringify(token));
@@ -29,7 +27,6 @@ const saveToken = (token) => {
   }
 };
 
-// Function to get a valid token
 const getToken = async () => {
   let token = loadToken();
   if (token) {
