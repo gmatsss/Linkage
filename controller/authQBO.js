@@ -1,3 +1,4 @@
+const { OAuthClient } = require("intuit-oauth");
 const { oauthClient, getToken, saveToken } = require("../utils/oauthQBO");
 
 exports.initiateAuth = (req, res) => {
