@@ -48,4 +48,5 @@ const getToken = async () => {
 module.exports = {
   oauthClient,
   getToken,
+  saveToken,
 };
