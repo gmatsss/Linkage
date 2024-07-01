@@ -2,8 +2,9 @@ const { OAuthClient } = require("intuit-oauth");
 const { oauthClient, getToken, saveToken } = require("../utils/oauthQBO");
 
 exports.initiateAuth = (req, res) => {
+  // Assuming the scopes are documented as strings like "com.intuit.quickbooks.accounting"
   const authUri = oauthClient.authorizeUri({
-    scope: [OAuthClient.scopes.Accounting, OAuthClient.scopes.OpenId],
+    scope: ["com.intuit.quickbooks.accounting", "openid"], // Update these scope strings as needed
     state: "intuit_csrf_token", // CSRF protection token
   });
   res.redirect(authUri);
