@@ -6,6 +6,7 @@ const callRouteslink = require("./routes/twiliolink");
 const qobRoutes = require("./routes/qobRoutes");
 const firefliesRoutes = require("./routes/fireflies");
 const koalaRoutes = require("./routes/Koala");
+const gmbroutes = require("./routes/gmbroutes");
 
 const connectDB = require("./db");
 
@@ -14,17 +15,15 @@ const app = express();
 // Connect to MongoDB
 connectDB();
 
-// Middleware for parsing application/json
 app.use(bodyParser.json());
-// Middleware for parsing application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/twilio", callRoutes);
 app.use("/callRouteslink", callRouteslink);
 app.use("/qobRoutes", qobRoutes);
 app.use("/fireflies", firefliesRoutes);
-
 app.use("/koala", koalaRoutes);
+app.use("/gmb", gmbroutes);
 
 app.get("/", (req, res) => {
   res.send("Server is running!");
