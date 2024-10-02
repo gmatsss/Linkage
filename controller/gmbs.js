@@ -1,4 +1,5 @@
 const axios = require("axios");
+const GmbPost = require("../model/GmbPost"); // Import your Mongoose model
 
 const triggernewpost = async (req, res) => {
   try {
@@ -27,23 +28,58 @@ const latestpost = async (req, res) => {
 
     // Ensure localPosts exists before proceeding
     if (allPostData && allPostData.localPosts) {
-      // Format the localPosts data
-      const formattedPosts = allPostData.localPosts.map((post) => ({
-        name: post.name,
-        languageCode: post.languageCode,
-        summary: post.summary,
-        state: post.state,
-        updateTime: post.updateTime,
-        createTime: post.createTime,
-        searchUrl: post.searchUrl,
-        callToAction: post.callToAction || null, // Handle if callToAction is missing
-        media: post.media || [], // Handle if media is missing
-        topicType: post.topicType,
-      }));
+      const formattedPosts = [];
+      let newPostSaved = false; // Flag to track if a new post is saved
 
-      console.log(formattedPosts);
+      // Iterate over each post
+      for (const post of allPostData.localPosts) {
+        const formattedPost = {
+          name: post.name,
+          languageCode: post.languageCode,
+          summary: post.summary,
+          state: post.state,
+          updateTime: post.updateTime,
+          createTime: post.createTime,
+          searchUrl: post.searchUrl,
+          callToAction: post.callToAction || null, // Handle if callToAction is missing
+          media: post.media || [], // Handle if media is missing
+          topicType: post.topicType,
+        };
 
-      // Return a successful response with the formatted data
+        // Check if the post already exists in the database
+        const existingPost = await GmbPost.findOne({ name: post.name });
+
+        if (!existingPost) {
+          // If post does not exist, save it to the database
+          const newPost = new GmbPost(formattedPost);
+          await newPost.save();
+          console.log(`Post saved: ${post.name}`);
+          formattedPosts.push({ ...formattedPost, status: "saved" });
+          newPostSaved = true; // Set flag to true
+
+          // Trigger Zapier webhook after saving the new post, only sending the saved post
+          await axios.post(
+            "https://hooks.zapier.com/hooks/catch/775472/2m6qaye/",
+            {
+              post: formattedPost, // Send the newly saved post data to Zapier
+            }
+          );
+          console.log("Zapier webhook triggered for post:", post.name);
+        } else {
+          console.log(`Post already exists: ${post.name}`);
+          formattedPosts.push({ ...formattedPost, status: "already exists" });
+        }
+      }
+
+      if (!newPostSaved) {
+        // If no new posts were saved, return a response indicating that all posts exist
+        return res.status(200).json({
+          success: true,
+          message: "All posts already exist, no need to create.",
+        });
+      }
+
+      // Return a successful response with the formatted data and statuses
       res.status(200).json({
         success: true,
         data: formattedPosts,
