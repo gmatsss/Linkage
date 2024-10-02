@@ -1,0 +1,18 @@
+// MC endpoint
+https://services.leadconnectorhq.com/phone-system/voice-call/inbound
+
+//tiliwo endpoint boss pat num
+http://3.80.93.16:8002/callRouteslink/incominglink
+
+//twilio agent enpdoint
+
+
+
+to find env 
+    find . -type f -name "*env*"
+to edit
+    nano .env
+
+    
+main endpoint
+http://3.80.93.16:8002/
