@@ -19,9 +19,30 @@ const triggernewpost = async (req, res) => {
 
 const latestpost = async (req, res) => {
   try {
+    // Log the incoming data (req.body)
     console.log(req.body);
+
+    // Assuming the req.body is the data you showed earlier, parse and return it in a formatted response
+    const formattedPosts = req.body.localPosts.map((post) => ({
+      name: post.name,
+      languageCode: post.languageCode,
+      summary: post.summary,
+      state: post.state,
+      updateTime: post.updateTime,
+      createTime: post.createTime,
+      searchUrl: post.searchUrl,
+      callToAction: post.callToAction || null, // If exists, include it, else null
+      media: post.media || [], // If media exists, include it, else an empty array
+      topicType: post.topicType,
+    }));
+
+    // Return the formatted response with a status of 200
+    res.status(200).json({
+      success: true,
+      data: formattedPosts,
+    });
   } catch (error) {
-    // Handling errors
+    // Handle any errors
     res.status(500).json({ success: false, message: error.message });
   }
 };
