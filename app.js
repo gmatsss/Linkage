@@ -6,7 +6,7 @@ const callRouteslink = require("./routes/twiliolink");
 const qobRoutes = require("./routes/qobRoutes");
 const firefliesRoutes = require("./routes/fireflies");
 const koalaRoutes = require("./routes/Koala");
-const gmbroutes = require("./routes/gmbroutes");
+const gmb = require("./routes/gmb");
 
 const connectDB = require("./db");
 
@@ -23,7 +23,7 @@ app.use("/callRouteslink", callRouteslink);
 app.use("/qobRoutes", qobRoutes);
 app.use("/fireflies", firefliesRoutes);
 app.use("/koala", koalaRoutes);
-app.use("/gmb", gmbroutes);
+app.use("/gmb", gmb);
 
 app.get("/", (req, res) => {
   res.send("Server is running!");
