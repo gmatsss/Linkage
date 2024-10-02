@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 <<<<<<< HEAD
+<<<<<<< HEAD
 const {
   getAuthUrl,
   handleOAuth2Callback,
@@ -17,6 +18,9 @@ router.get("/oauth2callback", handleOAuth2Callback);
 router.get("/check-new-posts", checkNewPosts);
 =======
 const { triggernewpost, latestpost } = require("../controller/gmb");
+=======
+const { triggernewpost, latestpost } = require("../controller/gmbs");
+>>>>>>> 9c1b6acbcca09a845af1091a87ce25f1b1589500
 
 router.get("/triggernewpost", triggernewpost);
 router.post("/latestpost", latestpost);
