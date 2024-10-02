@@ -19,9 +19,6 @@ const triggernewpost = async (req, res) => {
 
 const latestpost = async (req, res) => {
   try {
-    // Log the incoming data (req.body)
-    console.log(req.body);
-
     // Parse the allpost string into a JSON object if it's a string
     const allPostData =
       typeof req.body.allpost === "string"
@@ -43,6 +40,8 @@ const latestpost = async (req, res) => {
         media: post.media || [], // Handle if media is missing
         topicType: post.topicType,
       }));
+
+      console.log(formattedPosts);
 
       // Return a successful response with the formatted data
       res.status(200).json({
