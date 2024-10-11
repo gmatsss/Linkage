@@ -7,7 +7,7 @@ const triggernewpostbcremit = async (req, res) => {
     const response = await axios.post(
       "https://hooks.zapier.com/hooks/catch/775472/21ollff/",
       {
-        summary: "Getpost",
+        summary: "Getpostbcremit",
       }
     );
     res.status(200).json({ success: true, data: response.data });
