@@ -50,12 +50,12 @@ const latestpostbcremit = async (req, res) => {
           formattedPosts.push({ ...formattedPost, status: "saved" });
           newPostSaved = true;
 
-          await axios.post(
-            "https://hooks.zapier.com/hooks/catch/775472/2m6qaye/",
-            {
-              post: formattedPost,
-            }
-          );
+          // await axios.post(
+          //   "https://hooks.zapier.com/hooks/catch/775472/2m6qaye/",
+          //   {
+          //     post: formattedPost,
+          //   }
+          // );
           console.log("Zapier webhook triggered for post:", post.name);
         } else {
           console.log(`Post already exists: ${post.name}`);
