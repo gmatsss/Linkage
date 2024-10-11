@@ -88,7 +88,7 @@ const latestpostbcremit = async (req, res) => {
 cron.schedule("0 * * * *", async () => {
   try {
     console.log("Cron job started: Triggering new post check...");
-    await triggernewpost(
+    await triggernewpostbcremit(
       { body: {} },
       {
         status: (code) => ({
@@ -108,7 +108,7 @@ cron.schedule("0 * * * *", async () => {
 //     console.log("Cron job started: Triggering new post check...");
 
 //     // Call the triggernewpost function with mock request and response objects
-//     await triggernewpost(
+//     await triggernewpostbcremit(
 //       { body: {} }, // Simulate req object
 //       {
 //         status: (code) => ({
