@@ -85,43 +85,43 @@ const latestpost = async (req, res) => {
   }
 };
 
-// cron.schedule("0 * * * *", async () => {
-//   try {
-//     console.log("Cron job started: Triggering new post check...");
-//     await triggernewpost(
-//       { body: {} },
-//       {
-//         status: (code) => ({
-//           json: (data) => console.log(`Response: ${code}`, data),
-//         }),
-//       }
-//     );
-//     console.log("Cron job completed: New post check triggered.");
-//   } catch (error) {
-//     console.error("Error running the cron job:", error.message);
-//   }
-// });
-
-cron.schedule("* * * * *", async () => {
-  // This will run every minute
+cron.schedule("0 * * * *", async () => {
   try {
     console.log("Cron job started: Triggering new post check...");
-
-    // Call the triggernewpost function with mock request and response objects
     await triggernewpost(
-      { body: {} }, // Simulate req object
+      { body: {} },
       {
         status: (code) => ({
           json: (data) => console.log(`Response: ${code}`, data),
         }),
       }
     );
-
     console.log("Cron job completed: New post check triggered.");
   } catch (error) {
     console.error("Error running the cron job:", error.message);
   }
 });
+
+// cron.schedule("* * * * *", async () => {
+//   // This will run every minute
+//   try {
+//     console.log("Cron job started: Triggering new post check...");
+
+//     // Call the triggernewpost function with mock request and response objects
+//     await triggernewpost(
+//       { body: {} }, // Simulate req object
+//       {
+//         status: (code) => ({
+//           json: (data) => console.log(`Response: ${code}`, data),
+//         }),
+//       }
+//     );
+
+//     console.log("Cron job completed: New post check triggered.");
+//   } catch (error) {
+//     console.error("Error running the cron job:", error.message);
+//   }
+// });
 
 module.exports = {
   triggernewpost,
