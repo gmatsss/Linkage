@@ -7,6 +7,8 @@ const qobRoutes = require("./routes/qobRoutes");
 const firefliesRoutes = require("./routes/fireflies");
 const koalaRoutes = require("./routes/Koala");
 const gmb = require("./routes/gmb");
+// const zenqa = require("./routes/zenqa");
+const openai = require("./routes/openai");
 
 const connectDB = require("./db");
 
@@ -24,6 +26,8 @@ app.use("/qobRoutes", qobRoutes);
 app.use("/fireflies", firefliesRoutes);
 app.use("/koala", koalaRoutes);
 app.use("/gmb", gmb);
+// app.use("/zenqa", zenqa);
+app.use("/openai", openai);
 
 app.get("/", (req, res) => {
   res.send("Server is running!");
