@@ -5,6 +5,18 @@ exports.chatWithOpenAI = async (req, res) => {
     const apiKey = process.env.OPENAI_API_KEY;
     const url = "https://api.openai.com/v1/chat/completions";
 
+    const messageContent = req.body.message;
+
+    // Check if the message is missing or empty
+    if (!messageContent || messageContent.trim() === "") {
+      return res.json({
+        success: true,
+        category: "negative",
+        isNegative: true,
+        reason: "The message content is empty or missing.",
+      });
+    }
+
     const data = {
       model: "gpt-4-0613",
       messages: [
@@ -26,7 +38,7 @@ exports.chatWithOpenAI = async (req, res) => {
   
   Only respond with this JSON object and nothing else.`,
         },
-        { role: "user", content: req.body.message },
+        { role: "user", content: messageContent },
       ],
       temperature: 0.3,
     };
